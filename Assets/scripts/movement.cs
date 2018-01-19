@@ -15,12 +15,17 @@ public class movement : MonoBehaviour {
 	private float h;
 	private bool isMove;
 
-	public float moveSpeed = 1.0f;
+	private float moveSpeed;
+	private GameObject player;
+	private body player_body_state;
 
 	// Use this for initialization
 	void Start () {
 		ani = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody>();
+		player = GameObject.Find("Player");
+		player_body_state = player.GetComponent<body> ();
+		moveSpeed = player_body_state.moveSpeed;
 	}
 	
 	// Update is called once per frame
@@ -43,6 +48,6 @@ public class movement : MonoBehaviour {
 
 		transform.localPosition += velocity * Time.fixedDeltaTime;
 
-		Debug.Log (h);
+		//Debug.Log (h);
 	}
 }
