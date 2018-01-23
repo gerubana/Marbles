@@ -4,7 +4,7 @@ using System.Collections;
 public class ThirdPersonCamera : MonoBehaviour {
 	private GameObject player;
 	public float smooth = 3f;		// カメラモーションのスムーズ化用変数
-	Transform standardPos;			// the usual position for the camera, specified by a transform in the game
+	Transform backPos;			// the usual position for the camera, specified by a transform in the game
 	Transform upPos;			// Front Camera locater
 	Transform jumpPos;			// Jump Camera locater
 	
@@ -12,11 +12,12 @@ public class ThirdPersonCamera : MonoBehaviour {
 	bool bQuickSwitch = false;	//Change Camera Position Quickly
 	bool isPressCtrl = false;
 
-	string nowPos; 
+	static string nowPos = "Back"; 
 	
 	void Start()
 	{
-		upPos = GameObject.Find ("Player/pos_up").transform;
+		upPos = GameObject.Find (Goble_Player.playerName+"/pos_up").transform;
+		backPos = GameObject.Find (Goble_Player.playerName+"/pos_back").transform;
 		// 各参照の初期化
 		//Debug.Log(upPos);
 		//Invoke ("setStartPos",2.5f);
@@ -29,23 +30,29 @@ public class ThirdPersonCamera : MonoBehaviour {
 	void setStartPos(){
 		this.GetComponent<Animator> ().applyRootMotion = true;
 		//カメラをスタートする
-		transform.position = standardPos.position;	
-		transform.forward = standardPos.forward;
+		transform.position = backPos.position;	
+		transform.forward = backPos.forward;
 	}
 	
 	
 	void FixedUpdate ()	// このカメラ切り替えはFixedUpdate()内でないと正常に動かない
 	{
 		
-		if(Input.GetButton("Fire2"))	//Alt
+		if(Input.GetButtonDown("Fire2"))	//Alt
 		{	
-			nowPos = "UP";
+			if (nowPos == "Back")
+				nowPos = "Up";
+			else
+				nowPos = "Back";
 		}
 
 		switch(nowPos)
 		{
-		case "UP":
+		case "Up":
 			setCameraPositionUpView();
+			return;
+		case "Back":
+			setCameraPositionBackView();
 			return;
 		default :
 			return;
@@ -56,13 +63,13 @@ public class ThirdPersonCamera : MonoBehaviour {
 	{
 		if(bQuickSwitch == false){
 			// the camera to standard position and direction
-			transform.position = Vector3.Lerp(transform.position, standardPos.position, Time.fixedDeltaTime * smooth);	
-			transform.forward = Vector3.Lerp(transform.forward, standardPos.forward, Time.fixedDeltaTime * smooth);
+			transform.position = Vector3.Lerp(transform.position, backPos.position, Time.fixedDeltaTime * smooth);	
+			transform.forward = Vector3.Lerp(transform.forward, backPos.forward, Time.fixedDeltaTime * smooth);
 		}
 		else{
 			// the camera to standard position and direction / Quick Change
-			transform.position = standardPos.position;	
-			transform.forward = standardPos.forward;
+			transform.position = backPos.position;	
+			transform.forward = backPos.forward;
 			bQuickSwitch = false;
 		}
 	}
@@ -74,5 +81,14 @@ public class ThirdPersonCamera : MonoBehaviour {
 		bQuickSwitch = false;
 		transform.position =  upPos.position;	
 		transform.forward = upPos.forward;		
+	}
+
+
+	public void setCameraPositionBackView()
+	{
+		// Change Jump Camera
+		bQuickSwitch = false;
+		transform.position =  backPos.position;	
+		transform.forward = backPos.forward;		
 	}
 }

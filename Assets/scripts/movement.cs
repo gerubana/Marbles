@@ -21,9 +21,14 @@ public class movement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//Debug.Log ("movement="+Goble_Player.playerName);
+		if(Goble_Player.playerName == null)
+			Goble_Player.playerName = this.name;
+		//Debug.Log ("movement="+Goble_Player.playerName);
+
 		ani = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody>();
-		player = GameObject.Find("Player");
+		player = GameObject.Find(Goble_Player.playerName);
 		player_body_state = player.GetComponent<body> ();
 		moveSpeed = player_body_state.moveSpeed;
 	}
@@ -48,6 +53,10 @@ public class movement : MonoBehaviour {
 
 		transform.localPosition += velocity * Time.fixedDeltaTime;
 
+		if (isMove == true)
+			player_body_state.moveAudio ();
+		else 
+			player_body_state.moveAudio_stop ();
 		//Debug.Log (h);
 	}
 }

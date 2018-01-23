@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\scripts\Goble_Player.cs" />
      <Compile Include="Assets\scripts\ThirdPersonCamera.cs" />
      <Compile Include="Assets\scripts\body.cs" />
      <Compile Include="Assets\scripts\marble_ball.cs" />

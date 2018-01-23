@@ -9,7 +9,7 @@ public class marble_ball : MonoBehaviour {
 	private body player_body_state;
 	// Use this for initialization
 	void Start () {
-		player = GameObject.Find("Player");
+		player = GameObject.Find(Goble_Player.playerName);
 		player_body_state = player.GetComponent<body> ();
 		speed = player_body_state.shoot_speed;
 		Destroy (this.gameObject, 2.0f);
