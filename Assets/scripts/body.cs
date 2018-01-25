@@ -26,7 +26,7 @@ public class body : MonoBehaviour {
 		//Debug.Log (Goble_Player.playerName);
 		if(Goble_Player.playerName == null)
 			Goble_Player.playerName = this.name;
-		Debug.Log (Goble_Player.playerName);
+		//Debug.Log (Goble_Player.playerName);
 
 		this_audio = GetComponent<AudioSource> ();
 		this_audio.clip = this_audio_clip[0];
@@ -53,7 +53,8 @@ public class body : MonoBehaviour {
 	{
 		if(Input.GetButtonDown("Fire1"))
 		{
-			shoot ();
+			if(this.name == Goble_Player.playerName)
+				shoot ();
 		}
 	}
 

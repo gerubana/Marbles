@@ -37,7 +37,8 @@ public class movement : MonoBehaviour {
 	void FixedUpdate () {
 		h = Input.GetAxis ("Horizontal");
 		isMove = (h!=0) ? true:false;
-		movecontroller (h, isMove);
+		if(this.name == Goble_Player.playerName)
+			movecontroller (h, isMove);
 	}
 
 	private void movecontroller(float h, bool isMove)
