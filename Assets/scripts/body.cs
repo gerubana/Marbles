@@ -6,6 +6,7 @@ public class body : MonoBehaviour {
 	//基本數值
 	public float shoot_speed; 
 	public float moveSpeed; 
+	public int Bullets_able_num = 15; 
 	//彈珠及發射器
 	public GameObject marble_ball;
 	public GameObject Fire;
@@ -57,14 +58,22 @@ public class body : MonoBehaviour {
 				shoot ();
 		}
 	}
-
+	//射擊相關
 	private void shoot()
 	{
 		marble_ball_ins = Instantiate(marble_ball, Fire.transform.position, transform.rotation)as GameObject;
 		Fire_smoke_ins = Instantiate(Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 		marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
 	}
+	//裝填
+	public void Filling()
+	{
+		marble_ball_ins = Instantiate(marble_ball, Fire.transform.position, transform.rotation)as GameObject;
+		Fire_smoke_ins = Instantiate(Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
+		marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+	}
 
+	//移動相關
 	public void moveAudio()
 	{
 		if(this_audio.clip != this_audio_clip[1])
@@ -81,6 +90,7 @@ public class body : MonoBehaviour {
 		audioPlay (this_audio_clip[0]);
 	}
 
+	//聲音相關
 	private void audioPlay(AudioClip playclip)
 	{
 		this_audio.clip = playclip;
