@@ -21,6 +21,9 @@ public class body : MonoBehaviour {
 	//音效控制
 	private bool audioIsPlaying = false;
 	private bool audioIsChange = false;
+	//最大彈數
+	private int Bullets_Max; 
+	private bool canshoot = true;
 
 	// Use this for initialization
 	void Start () {
@@ -34,6 +37,7 @@ public class body : MonoBehaviour {
 		this_audio.Play ();
 		this_audio.loop = true;
 		audioIsPlaying = true;
+		Bullets_Max = Bullets_able_num;
 	}
 	
 	// Update is called once per frame
@@ -57,20 +61,37 @@ public class body : MonoBehaviour {
 			if(this.name == Goble_Player.playerName)
 				shoot ();
 		}
+
+		if (Input.GetKeyUp(KeyCode.X)) 
+		{
+			//InvokeRepeating("Filling",0.2f, 0.2f );
+			StartCoroutine(Filling());
+		}
 	}
 	//射擊相關
 	private void shoot()
 	{
-		marble_ball_ins = Instantiate(marble_ball, Fire.transform.position, transform.rotation)as GameObject;
-		Fire_smoke_ins = Instantiate(Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
-		marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+		if (Bullets_able_num != 0 && canshoot) {
+			marble_ball_ins = Instantiate (marble_ball, Fire.transform.position, transform.rotation)as GameObject;
+			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
+			marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+			Bullets_able_num--;
+		} else {
+			canshoot = false;
+		}
 	}
 	//裝填
-	public void Filling()
+	public IEnumerator Filling()
 	{
-		marble_ball_ins = Instantiate(marble_ball, Fire.transform.position, transform.rotation)as GameObject;
-		Fire_smoke_ins = Instantiate(Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
-		marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+		Debug.Log ("@@");
+		if (Bullets_Max - Bullets_able_num > 0 )
+		{
+			Bullets_able_num++;
+			canshoot = false;
+		} else {
+			canshoot = true;
+		}
+		yield return new WaitForSeconds (0.2f);
 	}
 
 	//移動相關

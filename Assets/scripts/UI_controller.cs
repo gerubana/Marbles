@@ -16,7 +16,8 @@ public class UI_controller : MonoBehaviour {
 
 	private GameObject player;
 	private body player_body_state;
-	private int bullet_num = 0;
+	private int bullet_max = 0;
+	private int bullet_now = 0;
 	private float now_time = 0;
 	private string sec = "00";
 	private string min = "00";
@@ -28,13 +29,16 @@ public class UI_controller : MonoBehaviour {
 
 		player = GameObject.Find(Goble_Player.playerName);
 		player_body_state = player.GetComponent<body> ();
-		bullet_num = player_body_state.Bullets_able_num;
-		//restart ();
+		bullet_max = player_body_state.Bullets_able_num;
+		bullet_now = bullet_max;
+		restart ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+		bullet_now = player_body_state.Bullets_able_num;
+		Bullet.GetComponent<UILabel> ().text = bullet_now.ToString() + " / " + bullet_max.ToString();
 	}
 
 	private void restart()
@@ -47,10 +51,11 @@ public class UI_controller : MonoBehaviour {
 		min = "00";
 		hour = "00";
 		Time.GetComponent<UILabel>().text = hour+":"+min+":"+sec;
-		Bullet.GetComponent<UILabel> ().text = bullet_num.ToString() + " / " + bullet_num.ToString();
+		Bullet.GetComponent<UILabel> ().text = bullet_now.ToString() + " / " + bullet_max.ToString();
+		player_body_state.Bullets_able_num = bullet_max;
 	}
 
-	public void change_self_value(float hp, float sp, string icon, int bullet)
+	public void change_self_value(float hp, float sp, string icon)
 	{
 		HP_self.GetComponent<UITexture> ().fillAmount = 0.5f;
 	}
