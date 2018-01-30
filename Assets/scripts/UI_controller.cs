@@ -39,6 +39,7 @@ public class UI_controller : MonoBehaviour {
 
 		bullet_now = player_body_state.Bullets_able_num;
 		Bullet.GetComponent<UILabel> ().text = bullet_now.ToString() + " / " + bullet_max.ToString();
+
 	}
 
 	private void restart()
@@ -55,8 +56,15 @@ public class UI_controller : MonoBehaviour {
 		player_body_state.Bullets_able_num = bullet_max;
 	}
 
-	public void change_self_value(float hp, float sp, string icon)
+	public void change_self_value(float hp, float sp)
 	{
-		HP_self.GetComponent<UITexture> ().fillAmount = 0.5f;
+		HP_self.GetComponent<UITexture> ().fillAmount = hp;
+		SP_self.GetComponent<UITexture> ().fillAmount = sp;
+	}
+
+	public void change_emeny_value(float hp, float sp)
+	{
+		HP_emeny.GetComponent<UITexture> ().fillAmount = hp;
+		SP_emeny.GetComponent<UITexture> ().fillAmount = sp;
 	}
 }

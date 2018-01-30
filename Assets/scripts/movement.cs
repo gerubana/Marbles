@@ -30,7 +30,7 @@ public class movement : MonoBehaviour {
 		rb = GetComponent<Rigidbody>();
 		player = GameObject.Find(Goble_Player.playerName);
 		player_body_state = player.GetComponent<body> ();
-		moveSpeed = player_body_state.moveSpeed;
+		moveSpeed = player_body_state.moveSpeed/10;
 	}
 	
 	// Update is called once per frame
