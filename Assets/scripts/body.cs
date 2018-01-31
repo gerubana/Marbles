@@ -9,11 +9,21 @@ public class body : MonoBehaviour {
 	public float fillSpeed = 0.3f; 
 	public float HP = 1.0f;
 	public float SP = 0; //max 100
-	public float attack = 20f; //base 20  (1:0.5 up)
-	public float Max_hp = 500f; //base 500 (1:5.0 up)
+	public float attack = 200f; //base 20  
+	public float Max_hp = 500f; //base 500 
 	public int Bullets_able_num = 15; 
 	//技能 1.單體大絕 *2.5 (SP-50) 2.單體連發 10*0.2 (SP-40) 3.同時擊發 10*1 (SP-35/40)
-
+	/*
+	 攻擊力設定調整 --> 原先 20(up0.5 MAX120) 改為 200(up5 MAX999)  約160等
+	HP設定調整 	--> 原先 500(up5 MAX1000) 改為 500(up10 MAX2000) 約150等
+	算上彈數和移動速度平均分攤190等 (合計500等)
+	最大攻擊力(必殺技1)/最大血量傷害值為24.975%
+	最大攻擊力(必殺技1)/最小血量傷害值為99.9%
+	最大攻擊力/最小血量傷害值為19.98%
+	最小攻擊力(必殺技1)/最大血量傷害值為5%
+	最小攻擊力/最大血量傷害值為1%
+	技能倍率調整 1.單發最大攻擊(5%，SP50%)  2.單條快速連發(0.5*10，SP30%)  3.齊發(2*10，SP40%)
+	 */
 
 	//彈珠及發射器
 	public GameObject marble_ball;
@@ -83,8 +93,8 @@ public class body : MonoBehaviour {
 
 		if (Input.GetKeyUp(KeyCode.X)) 
 		{
-			//InvokeRepeating("Filling",0.2f, 0.2f );
-			StartCoroutine(Filling());
+			if(this.name == Goble_Player.playerName)
+				StartCoroutine(Filling());
 		}
 	}
 	//射擊相關
@@ -94,6 +104,7 @@ public class body : MonoBehaviour {
 			marble_ball_ins = Instantiate (marble_ball, Fire.transform.position, transform.rotation)as GameObject;
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 			marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+			marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack;//決定子彈威力
 			Bullets_able_num--;
 		} else {
 			canshoot = false;
