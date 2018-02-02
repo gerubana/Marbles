@@ -3,16 +3,26 @@ using System.Collections;
 
 public class ThirdPersonCamera : MonoBehaviour {
 	private GameObject player;
-	public float smooth = 3f;		// カメラモーションのスムーズ化用変数
+	public float smooth = 3f;		
 	Transform backPos;			// the usual position for the camera, specified by a transform in the game
 	Transform upPos;			// Front Camera locater
 	Transform jumpPos;			// Jump Camera locater
 	
-	// スムーズに繋がない時（クイック切り替え）用のブーリアンフラグ
+	// 切換
 	bool bQuickSwitch = false;	//Change Camera Position Quickly
 	bool isPressCtrl = false;
 
 	static string nowPos = "Back"; 
+
+	//螢幕搖晃
+	private Vector3 axisShakeMin = new Vector3 (-0.2f,0.0f,0f);
+	private Vector3 axisShakeMax = new Vector3 (0.2f,0.5f,0.1f);
+
+	private float timeOfShake;
+	private float timeOfShakeStore;
+
+	private bool isShake;
+	private Vector3 PosStart;
 	
 	void Start()
 	{
@@ -21,6 +31,9 @@ public class ThirdPersonCamera : MonoBehaviour {
 		// 各参照の初期化
 		//Debug.Log(upPos);
 		//Invoke ("setStartPos",2.5f);
+		isShake = false;
+		PosStart = upPos.position;
+		timeOfShakeStore = timeOfShake;
 	}
 
 	void getGoalPos(){
@@ -29,7 +42,6 @@ public class ThirdPersonCamera : MonoBehaviour {
 
 	void setStartPos(){
 		this.GetComponent<Animator> ().applyRootMotion = true;
-		//カメラをスタートする
 		transform.position = backPos.position;	
 		transform.forward = backPos.forward;
 	}
@@ -81,6 +93,8 @@ public class ThirdPersonCamera : MonoBehaviour {
 		bQuickSwitch = false;
 		transform.position =  upPos.position;	
 		transform.forward = upPos.forward;		
+		PosStart = upPos.position;
+		shakeing ();
 	}
 
 
@@ -89,6 +103,35 @@ public class ThirdPersonCamera : MonoBehaviour {
 		// Change Jump Camera
 		bQuickSwitch = false;
 		transform.position =  backPos.position;	
-		transform.forward = backPos.forward;		
+		transform.forward = backPos.forward;	
+
+		PosStart = backPos.position;	
+		shakeing ();
+	}
+
+	public void shakeCamera(float shakeTime)
+	{
+		if (shakeTime > 0.0f) {
+			timeOfShake = shakeTime;
+		} else {
+			timeOfShake = timeOfShakeStore;
+		}
+
+		isShake = true;
+	}
+
+	public void shakeing()
+	{
+		if (isShake) 
+		{
+			transform.position = PosStart + new Vector3 (Random.Range (axisShakeMin.x, axisShakeMax.x), Random.Range (axisShakeMin.y, axisShakeMax.y), Random.Range (axisShakeMin.z, axisShakeMax.z));
+			timeOfShake -= Time.deltaTime;
+
+			if (timeOfShake <= 0.0f) 
+			{
+				isShake = false;
+				transform.position = PosStart;
+			}
+		}
 	}
 }

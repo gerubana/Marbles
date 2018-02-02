@@ -64,8 +64,14 @@ public class body : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(this.name == Goble_Player.playerName)
-			UI_script.change_self_value(HP,SP);
+		if (SP >= 1)
+			SP = 1;
+
+		if (this.name == Goble_Player.playerName) {
+			UI_script.change_self_value (HP, SP);
+		} else {
+			UI_script.change_emeny_value (HP, SP);
+		}
 
 		if(HP <= 0)
 		{
@@ -87,8 +93,9 @@ public class body : MonoBehaviour {
 	{
 		if(Input.GetButtonDown("Fire1"))
 		{
-			if(this.name == Goble_Player.playerName)
+			//if(this.name == Goble_Player.playerName)
 				shoot ();
+				SP += 0.05f;
 		}
 
 		if (Input.GetKeyUp(KeyCode.X)) 
