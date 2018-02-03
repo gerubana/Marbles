@@ -27,10 +27,11 @@ public class body : MonoBehaviour {
 
 	//彈珠及發射器
 	public GameObject marble_ball;
+	public GameObject marble_FireBall;
 	public GameObject Fire;
 	public GameObject Fire_smoke;
 	//音效
-	public AudioClip[] this_audio_clip = new AudioClip[5];
+	public AudioClip[] this_audio_clip = new AudioClip[3];
 	public AudioSource this_audio;
 
 	//複製彈珠
@@ -91,10 +92,10 @@ public class body : MonoBehaviour {
 
 	void FixedUpdate () 
 	{
-		if(Input.GetButtonDown("Fire1"))
+		if(Input.GetButtonUp("Fire1"))
 		{
 			//if(this.name == Goble_Player.playerName)
-				shoot ();
+				shoot ("normal");
 				SP += 0.05f;
 		}
 
@@ -103,18 +104,40 @@ public class body : MonoBehaviour {
 			if(this.name == Goble_Player.playerName)
 				StartCoroutine(Filling());
 		}
+
+		if (Input.GetKeyUp(KeyCode.F)) 
+		{
+			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
+			//{
+				//SP -= 0.5f;
+				shoot ("Fire");
+			//}
+		}
 	}
 	//射擊相關
-	private void shoot()
+	private void shoot(string skill_name)
 	{
-		if (Bullets_able_num != 0 && canshoot) {
-			marble_ball_ins = Instantiate (marble_ball, Fire.transform.position, transform.rotation)as GameObject;
+
+		if (skill_name == "normal") {
+			if (Bullets_able_num != 0 && canshoot) {
+				marble_ball_ins = Instantiate (marble_ball, Fire.transform.position, transform.rotation)as GameObject;
+				Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
+				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack;//決定子彈威力
+				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+				marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
+
+				Bullets_able_num--;
+			} else {
+				canshoot = false;
+			}
+		} else if (skill_name == "Fire") {
+			marble_ball_ins = Instantiate (marble_FireBall, Fire.transform.position, transform.rotation)as GameObject;
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
+			marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*5;//決定子彈威力
+			marble_ball_ins.GetComponent<marble_ball> ().Skill = true;//是否為必殺彈
 			marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
-			marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack;//決定子彈威力
-			Bullets_able_num--;
-		} else {
-			canshoot = false;
+			Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 		}
 	}
 	//裝填

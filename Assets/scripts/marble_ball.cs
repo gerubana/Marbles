@@ -7,6 +7,9 @@ public class marble_ball : MonoBehaviour {
 	public GameObject hit_small;
 	public GameObject hit_big;
 	public GameObject hit_over;
+	public GameObject hit_break;
+	//子彈類型
+	public bool Skill = false;
 	//產生爆炸效果
 	private GameObject Fire_smoke_ins;
 
@@ -42,32 +45,36 @@ public class marble_ball : MonoBehaviour {
 	{
 
 		Debug.Log (object_);
-		if (object_.tag == "Player")
+		if (object_.tag == "Player" )
 		{ 
 			Max_hp = object_.GetComponent<body> ().Max_hp;
 			damage = self_ball_attack / 10 / Max_hp;
 
-			explosion ();
 
 			object_.GetComponent<body> ().HP -= damage;
-			//if(不等於絕招){
 			object_.GetComponent<body> ().SP += damage;
-			//}
+
+			if (!Skill) {
+				explosion ("normal");
+			} else {
+				explosion ("skill");
+			}
 
 			Destroy (gameObject);
 
-			camera_script.shakeCamera (0.5f);
+			if(object_.name == Goble_Player.playerName)
+				camera_script.shakeCamera (0.5f);
 		} 
 		else if (object_.tag == "ball") 
 		{ 
 			emeny_ball_attack = object_.GetComponent<marble_ball> ().self_ball_attack;
 			compare_attack = self_ball_attack - emeny_ball_attack;
 			if (Mathf.Abs (compare_attack) <= 50) { 
-				explosion ();
+				explosion ("break");
 				Destroy (gameObject);
 			} else {
 				if (self_ball_attack < emeny_ball_attack) {
-					explosion ();
+					explosion ("break");
 					Destroy (gameObject);
 				} else {
 					self_ball_attack = compare_attack;
@@ -76,13 +83,33 @@ public class marble_ball : MonoBehaviour {
 		} 
 		else 
 		{
-			explosion ();
-			Destroy (gameObject);
+			if (!Skill) {
+				explosion ("normal");
+				Destroy (gameObject);
+			}
 		}
 	}
 
-	public void explosion()
+	public void explosion(string power)
 	{
-		Fire_smoke_ins = Instantiate(hit_small, transform.position, transform.rotation)as GameObject;
+		switch(power)
+		{
+		case "normal":
+			Fire_smoke_ins = Instantiate (hit_small, transform.position, transform.rotation)as GameObject;
+			return;
+		case "skill":
+			Fire_smoke_ins = Instantiate(hit_big, transform.position, transform.rotation)as GameObject;
+			return;
+		case "gameover":
+			Fire_smoke_ins = Instantiate(hit_over, transform.position, transform.rotation)as GameObject;
+			return;
+		case "break":
+			Fire_smoke_ins = Instantiate(hit_break, transform.position, transform.rotation)as GameObject;
+			return;
+		default :
+			Fire_smoke_ins = Instantiate(hit_small, transform.position, transform.rotation)as GameObject;
+			return;
+		}
+
 	}
 }
