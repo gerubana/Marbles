@@ -30,6 +30,7 @@ public class body : MonoBehaviour {
 	public GameObject marble_FireBall;
 	public GameObject Fire;
 	public GameObject Fire_smoke;
+	public GameObject wind_from_asset;
 	//音效
 	public AudioClip[] this_audio_clip = new AudioClip[3];
 	public AudioSource this_audio;
@@ -37,6 +38,7 @@ public class body : MonoBehaviour {
 	//複製彈珠
 	private GameObject marble_ball_ins;
 	private GameObject Fire_smoke_ins;
+	private GameObject wind_ins;
 	//音效控制
 	private bool audioIsPlaying = false;
 	private bool audioIsChange = false;
@@ -45,6 +47,10 @@ public class body : MonoBehaviour {
 	private bool canshoot = true;
 	//UI
 	private UI_controller UI_script;
+	//集氣
+	private bool ball_strong = false;
+	private bool start_count = false;
+	private float buttonTime = 0f;
 
 	// Use this for initialization
 	void Start () {
@@ -60,7 +66,6 @@ public class body : MonoBehaviour {
 		this_audio.loop = true;
 		audioIsPlaying = true;
 		Bullets_Max = Bullets_able_num;
-
 	}
 	
 	// Update is called once per frame
@@ -79,6 +84,24 @@ public class body : MonoBehaviour {
 			//大爆炸
 		}
 
+
+		if (start_count && buttonTime<1)
+		{
+			buttonTime += Time.deltaTime;
+			if (buttonTime >= 1) {
+				start_count = false;
+				buttonTime = 0f;
+				ball_strong = true;
+				wind_ins = Instantiate (wind_from_asset, Fire.transform.position, transform.rotation)as GameObject;
+			} else {
+				ball_strong = false;
+			}
+		}
+
+		if (ball_strong && wind_ins != null)
+		{
+			wind_ins.transform.position = Fire.transform.position;
+		}
 	}
 
 
@@ -92,9 +115,16 @@ public class body : MonoBehaviour {
 
 	void FixedUpdate () 
 	{
+		if (Input.GetButtonDown ("Fire1")) 
+		{
+			start_count = true;
+		}
+
 		if(Input.GetButtonUp("Fire1"))
 		{
 			//if(this.name == Goble_Player.playerName)
+				start_count = false;
+				buttonTime = 0f;
 				shoot ("normal");
 				SP += 0.05f;
 		}
@@ -124,6 +154,14 @@ public class body : MonoBehaviour {
 				Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack;//決定子彈威力
 				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+
+				if(ball_strong)
+				{
+					ball_strong = false;
+					marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*1.5f;//決定子彈威力
+					wind_ins.transform.parent = marble_ball_ins.transform;
+				}
+
 				marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 
