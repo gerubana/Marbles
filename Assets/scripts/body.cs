@@ -117,16 +117,19 @@ public class body : MonoBehaviour {
 	{
 		if (Input.GetButtonDown ("Fire1")) 
 		{
-			start_count = true;
+			if (this.name == Goble_Player.playerName) 
+				start_count = true;
 		}
 
 		if(Input.GetButtonUp("Fire1"))
 		{
-			//if(this.name == Goble_Player.playerName)
+			if (this.name == Goble_Player.playerName) 
+			{
 				start_count = false;
 				buttonTime = 0f;
 				shoot ("normal");
 				SP += 0.05f;
+			}
 		}
 
 		if (Input.GetKeyUp(KeyCode.X)) 
@@ -141,6 +144,14 @@ public class body : MonoBehaviour {
 			//{
 				//SP -= 0.5f;
 				shoot ("Fire");
+			//}
+		}
+		if (Input.GetKeyUp(KeyCode.V)) 
+		{
+			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
+			//{
+			//SP -= 0.5f;
+			shoot ("10_V");
 			//}
 		}
 	}
@@ -176,6 +187,16 @@ public class body : MonoBehaviour {
 			marble_ball_ins.GetComponent<marble_ball> ().Skill = true;//是否為必殺彈
 			marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
 			Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
+		} else if (skill_name == "10_V") {
+			for (int tmpNum = 0; tmpNum < 10; tmpNum++)
+			{
+				Vector3 tmpV3 = new Vector3 (0, 0, tmpNum * 0.21f);
+				marble_ball_ins = Instantiate (marble_ball, Fire.transform.position-tmpV3, transform.rotation)as GameObject;
+				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*0.5f;//決定子彈威力
+				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
+			}
+			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 		}
 	}
 	//裝填

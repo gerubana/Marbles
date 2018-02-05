@@ -22,6 +22,7 @@ public class marble_ball : MonoBehaviour {
 	public float self_ball_attack; //根據不同子彈改變數值，子彈互撞沒消失也要改變
 	private float emeny_ball_attack;
 	private float compare_attack;
+	private float hit_pos_rang;//計算擊中範圍
 
 	private ThirdPersonCamera camera_script;
 
@@ -44,12 +45,14 @@ public class marble_ball : MonoBehaviour {
 	void OnTriggerEnter(Collider object_)
 	{
 
-		Debug.Log (object_);
 		if (object_.tag == "Player" )
 		{ 
-			Max_hp = object_.GetComponent<body> ().Max_hp;
-			damage = self_ball_attack / 10 / Max_hp;
+			//當子彈越遠離中心點傷害越低(一般子彈最低約0.86，最高0.99，火球彈最低約0.73，最高0.99)
+			hit_pos_rang = 1.0f - Mathf.Abs(this.transform.position.x - object_.transform.position.x)/3;
+			Debug.Log (hit_pos_rang);
 
+			Max_hp = object_.GetComponent<body> ().Max_hp;
+			damage = self_ball_attack / 10 / Max_hp * hit_pos_rang;
 
 			object_.GetComponent<body> ().HP -= damage;
 			object_.GetComponent<body> ().SP += damage;
