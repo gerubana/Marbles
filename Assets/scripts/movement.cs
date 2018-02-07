@@ -18,6 +18,9 @@ public class movement : MonoBehaviour {
 	private float moveSpeed;
 	private GameObject player;
 	private body player_body_state;
+	//移動範圍
+	private float move_range_min;
+	private float move_range_max;
 
 	// Use this for initialization
 	void Start () {
@@ -59,5 +62,12 @@ public class movement : MonoBehaviour {
 		else 
 			player_body_state.moveAudio_stop ();
 		//Debug.Log (h);
+	}
+
+	//最大範圍為2.155
+	public void RandomMove(float range)
+	{
+		move_range_min = -range * 2.155f;
+		move_range_max = range * 2.155f;
 	}
 }

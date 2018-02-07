@@ -51,6 +51,8 @@ public class body : MonoBehaviour {
 	private bool ball_strong = false;
 	private bool start_count = false;
 	private float buttonTime = 0f;
+	//AI
+	private bool AI = true;
 
 	// Use this for initialization
 	void Start () {
@@ -58,6 +60,8 @@ public class body : MonoBehaviour {
 		if(Goble_Player.playerName == null)
 			Goble_Player.playerName = this.name;
 		//Debug.Log (Goble_Player.playerName);
+		if (Goble_Player.playerName != null)
+			AI = false;
 
 		UI_script = GameObject.Find("UI Root").GetComponent<UI_controller>();
 		this_audio = GetComponent<AudioSource> ();
@@ -150,8 +154,16 @@ public class body : MonoBehaviour {
 		{
 			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
 			//{
-			//SP -= 0.5f;
+			//SP -= 0.4f;
 			shoot ("10_V");
+			//}
+		}
+		if (Input.GetKeyUp(KeyCode.B)) 
+		{
+			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
+			//{
+			//SP -= 0.45f;
+			shoot ("10_H");
 			//}
 		}
 	}
@@ -193,6 +205,16 @@ public class body : MonoBehaviour {
 				Vector3 tmpV3 = new Vector3 (0, 0, tmpNum * 0.21f);
 				marble_ball_ins = Instantiate (marble_ball, Fire.transform.position-tmpV3, transform.rotation)as GameObject;
 				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*0.5f;//決定子彈威力
+				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
+			}
+			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
+		} else if (skill_name == "10_H") {
+			for (int tmpNum = 0; tmpNum < 10; tmpNum++)
+			{
+				Vector3 tmpV3 = new Vector3 (-2.25f + tmpNum * 0.5f, Fire.transform.position.y , this.transform.position.z);
+				marble_ball_ins = Instantiate (marble_ball, tmpV3, transform.rotation)as GameObject;
+				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*2.0f;//決定子彈威力
 				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 			}

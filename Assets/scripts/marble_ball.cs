@@ -44,12 +44,11 @@ public class marble_ball : MonoBehaviour {
 
 	void OnTriggerEnter(Collider object_)
 	{
-
 		if (object_.tag == "Player" )
 		{ 
 			//當子彈越遠離中心點傷害越低(一般子彈最低約0.86，最高0.99，火球彈最低約0.73，最高0.99)
 			hit_pos_rang = 1.0f - Mathf.Abs(this.transform.position.x - object_.transform.position.x)/3;
-			Debug.Log (hit_pos_rang);
+			//Debug.Log (hit_pos_rang);
 
 			Max_hp = object_.GetComponent<body> ().Max_hp;
 			damage = self_ball_attack / 10 / Max_hp * hit_pos_rang;
@@ -86,7 +85,7 @@ public class marble_ball : MonoBehaviour {
 		} 
 		else 
 		{
-			if (!Skill) {
+			if (!Skill && object_.tag != "AI_Range") {
 				explosion ("normal");
 				Destroy (gameObject);
 			}
