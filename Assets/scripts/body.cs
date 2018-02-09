@@ -50,9 +50,16 @@ public class body : MonoBehaviour {
 	//集氣
 	private bool ball_strong = false;
 	private bool start_count = false;
-	private float buttonTime = 0f;
+	private float buttonTime;
+	private bool use_skill = true;
 	//AI
-	private bool AI = true;
+	public bool AI = true;
+	private int AI_Level; //AI強度
+	private int ran_shoot_num; //隨機射出子彈數量
+	private int ran_fill_num; //隨機在子彈剩幾發時補充
+	private float ran_shoot_time; //隨機間格時間發射子彈
+	private bool AI_canshoot = false; 
+
 
 	// Use this for initialization
 	void Start () {
@@ -60,7 +67,7 @@ public class body : MonoBehaviour {
 		if(Goble_Player.playerName == null)
 			Goble_Player.playerName = this.name;
 		//Debug.Log (Goble_Player.playerName);
-		if (Goble_Player.playerName != null)
+		if (Goble_Player.playerName == this.name || Goble_Player.playerName == this.name)
 			AI = false;
 
 		UI_script = GameObject.Find("UI Root").GetComponent<UI_controller>();
@@ -70,6 +77,13 @@ public class body : MonoBehaviour {
 		this_audio.loop = true;
 		audioIsPlaying = true;
 		Bullets_Max = Bullets_able_num;
+
+		if (AI) 
+		{
+			StartCoroutine(AI_shoot());
+			//隨機在子彈剩幾發時補充
+			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)ran_shoot_num)); 
+		}
 	}
 	
 	// Update is called once per frame
@@ -88,14 +102,69 @@ public class body : MonoBehaviour {
 			//大爆炸
 		}
 
+	}
 
-		if (start_count && buttonTime<1)
+	void FixedUpdate () 
+	{
+		if (Input.GetButtonDown ("Fire1")) 
 		{
-			buttonTime += Time.deltaTime;
-			if (buttonTime >= 1) {
+			if (this.name == Goble_Player.playerName)
+			{
+				start_count = true;
+				use_skill = false;
+			}
+		}
+
+		if(Input.GetButtonUp("Fire1"))
+		{
+			if (this.name == Goble_Player.playerName) 
+			{
+				shoot ("normal");
 				start_count = false;
 				buttonTime = 0f;
+				SP += 0.05f;
+				use_skill = true;
+			}
+		}
+
+		if (Input.GetKeyUp(KeyCode.X) && use_skill) 
+		{
+			if(this.name == Goble_Player.playerName)
+				StartCoroutine(Filling());
+		}
+
+		if (Input.GetKeyUp(KeyCode.F) && use_skill) 
+		{
+			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
+			//{
+				//SP -= 0.5f;
+				shoot ("Fire");
+			//}
+		}
+		if (Input.GetKeyUp(KeyCode.V) && use_skill) 
+		{
+			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
+			//{
+			//SP -= 0.4f;
+			shoot ("10_V");
+			//}
+		}
+		if (Input.GetKeyUp(KeyCode.B) && use_skill) 
+		{
+			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
+			//{
+			//SP -= 0.45f;
+			shoot ("10_H");
+			//}
+		}
+
+		if (start_count && buttonTime<1 )
+		{
+			buttonTime += Time.deltaTime;
+			if (buttonTime >= 1 && canshoot && ball_strong == false) {
 				ball_strong = true;
+				start_count = false;
+				//buttonTime = 0f;
 				wind_ins = Instantiate (wind_from_asset, Fire.transform.position, transform.rotation)as GameObject;
 			} else {
 				ball_strong = false;
@@ -106,100 +175,58 @@ public class body : MonoBehaviour {
 		{
 			wind_ins.transform.position = Fire.transform.position;
 		}
-	}
 
-
-	/*void OnTriggerEnter(Collider object_)
-	{
-		if (object_.tag == "ball") {
-			object_.GetComponent<marble_ball> ().explosion();
-			Destroy (object_.gameObject);
-		}
-	}*/
-
-	void FixedUpdate () 
-	{
-		if (Input.GetButtonDown ("Fire1")) 
+		if (AI) 
 		{
-			if (this.name == Goble_Player.playerName) 
-				start_count = true;
-		}
-
-		if(Input.GetButtonUp("Fire1"))
-		{
-			if (this.name == Goble_Player.playerName) 
-			{
-				start_count = false;
-				buttonTime = 0f;
-				shoot ("normal");
-				SP += 0.05f;
-			}
-		}
-
-		if (Input.GetKeyUp(KeyCode.X)) 
-		{
-			if(this.name == Goble_Player.playerName)
-				StartCoroutine(Filling());
-		}
-
-		if (Input.GetKeyUp(KeyCode.F)) 
-		{
-			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
-			//{
-				//SP -= 0.5f;
-				shoot ("Fire");
-			//}
-		}
-		if (Input.GetKeyUp(KeyCode.V)) 
-		{
-			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
-			//{
-			//SP -= 0.4f;
-			shoot ("10_V");
-			//}
-		}
-		if (Input.GetKeyUp(KeyCode.B)) 
-		{
-			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
-			//{
-			//SP -= 0.45f;
-			shoot ("10_H");
-			//}
+			AI_filling ();
 		}
 	}
 	//射擊相關
 	private void shoot(string skill_name)
 	{
 
-		if (skill_name == "normal") {
-			if (Bullets_able_num != 0 && canshoot) {
+		if (skill_name == "normal") 
+		{
+			if (Bullets_able_num != 0 && canshoot) 
+			{
 				marble_ball_ins = Instantiate (marble_ball, Fire.transform.position, transform.rotation)as GameObject;
 				Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack;//決定子彈威力
 				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
 
-				if(ball_strong)
+				if(wind_ins)
 				{
 					ball_strong = false;
 					marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*1.5f;//決定子彈威力
 					wind_ins.transform.parent = marble_ball_ins.transform;
+					Destroy (wind_ins,1.0f);
 				}
 
 				marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 
 				Bullets_able_num--;
-			} else {
+			} 
+			else 
+			{
 				canshoot = false;
 			}
-		} else if (skill_name == "Fire") {
+		}
+		else if (skill_name == "Fire") 
+		{
 			marble_ball_ins = Instantiate (marble_FireBall, Fire.transform.position, transform.rotation)as GameObject;
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 			marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*5;//決定子彈威力
 			marble_ball_ins.GetComponent<marble_ball> ().Skill = true;//是否為必殺彈
 			marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
 			Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
-		} else if (skill_name == "10_V") {
+			if(wind_ins)
+			{
+				Destroy (wind_ins);
+			}
+		} 
+		else if (skill_name == "10_V") 
+		{
 			for (int tmpNum = 0; tmpNum < 10; tmpNum++)
 			{
 				Vector3 tmpV3 = new Vector3 (0, 0, tmpNum * 0.21f);
@@ -209,7 +236,13 @@ public class body : MonoBehaviour {
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 			}
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
-		} else if (skill_name == "10_H") {
+			if(wind_ins)
+			{
+				Destroy (wind_ins);
+			}
+		} 
+		else if (skill_name == "10_H") 
+		{
 			for (int tmpNum = 0; tmpNum < 10; tmpNum++)
 			{
 				Vector3 tmpV3 = new Vector3 (-2.25f + tmpNum * 0.5f, Fire.transform.position.y , this.transform.position.z);
@@ -219,6 +252,10 @@ public class body : MonoBehaviour {
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 			}
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
+			if(wind_ins)
+			{
+				Destroy (wind_ins);
+			}
 		}
 	}
 	//裝填
@@ -274,4 +311,39 @@ public class body : MonoBehaviour {
 		}
 	}
 
+	//AI自動射擊
+	private IEnumerator AI_shoot ()
+	{
+		if (AI_canshoot) 
+		{
+			//隨機射出子彈數量，若數量大於目前殘彈，則發射殘彈數
+			ran_shoot_num = (int)((Mathf.Floor (Random.Range (1.0f, 4.0f)) < Bullets_able_num) ? Bullets_able_num : Mathf.Floor (Random.Range (1.0f, 4.0f)));
+
+			shoot("normal");
+			AI_canshoot = false;
+			StartCoroutine(AI_shoot());
+		} 
+		else 
+		{
+			//隨機間格時間發射子彈
+			ran_shoot_time = Random.Range (0.5f, 3.0f); 
+			Debug.Log ("ran_shoot_time="+ran_shoot_time);
+			yield return new WaitForSeconds (ran_shoot_time);
+			AI_canshoot = true;
+			StartCoroutine(AI_shoot());
+		}
+
+		//shoot("normal");
+	}
+	//AI隨機彈數自動填彈
+	private void AI_filling()
+	{
+
+		if (Bullets_able_num <= ran_fill_num) 
+		{
+			StartCoroutine(Filling());
+			//隨機在子彈剩幾發時補充
+			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)ran_shoot_num)); 
+		}
+	}
 }

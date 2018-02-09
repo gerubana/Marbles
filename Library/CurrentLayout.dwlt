@@ -522,11 +522,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.23216835, y: -0.23306584, z: 0.057405848, w: -0.94259363}
     speed: 2
-    m_Value: {x: -0.23216835, y: -0.23306584, z: 0.057405848, w: -0.94259363}
+    m_Value: {x: -0.23216836, y: -0.23306586, z: 0.057405848, w: -0.9425937}
   m_Size:
-    m_Target: 3.1353328
+    m_Target: 2.8353329
     speed: 2
-    m_Value: 3.1353328
+    m_Value: 2.8353329
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -616,9 +616,9 @@ MonoBehaviour:
     height: 375
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: c4340000
-    m_LastClickedID: 13508
-    m_ExpandedIDs: e2fbffff00000000c4340000dc34000008350000123500004435000002360000
+    m_SelectedIDs: 50350000
+    m_LastClickedID: 13648
+    m_ExpandedIDs: e2fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -687,10 +687,10 @@ MonoBehaviour:
   m_LastProjectPath: D:\Unity\Marbles
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 19}
+    scrollPos: {x: 0, y: 367}
     m_SelectedIDs: c62d0000
     m_LastClickedID: 11718
-    m_ExpandedIDs: 00000000222700001e28000030280000a2280000082900000e2900001e2a0000ae2d0000b22d0000122e00003a2e000002300000d23100005032000058320000aa32000000ca9a3bffffff7f
+    m_ExpandedIDs: 0000000022270000e6270000162800001e28000030280000a22800000e2900001e2a0000722a0000062c0000b22d00003a2e000002300000d231000058320000aa32000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -718,7 +718,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000222700001e28000030280000a2280000082900000e2900001e2a0000062c0000ae2d0000b22d0000122e00003a2e000002300000d23100005032000058320000aa320000
+    m_ExpandedIDs: 0000000022270000e6270000162800001e28000030280000a22800000e2900001e2a0000722a0000062c0000b22d00003a2e000002300000d231000058320000aa320000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -799,7 +799,7 @@ MonoBehaviour:
     y: 92
     width: 275
     height: 750
-  m_ScrollPosition: {x: 0, y: 0}
+  m_ScrollPosition: {x: 0, y: 840}
   m_InspectorMode: 0
   m_PreviewResizer:
     m_CachedPref: 244
