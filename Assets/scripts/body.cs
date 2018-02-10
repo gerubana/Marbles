@@ -45,6 +45,7 @@ public class body : MonoBehaviour {
 	//最大彈數
 	private int Bullets_Max; 
 	private bool canshoot = true;
+	private bool isFilling = false;
 	//UI
 	private UI_controller UI_script;
 	//集氣
@@ -82,7 +83,7 @@ public class body : MonoBehaviour {
 		{
 			StartCoroutine(AI_shoot());
 			//隨機在子彈剩幾發時補充
-			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)ran_shoot_num)); 
+			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)Bullets_Max)); 
 		}
 	}
 	
@@ -99,86 +100,76 @@ public class body : MonoBehaviour {
 
 		if(HP <= 0)
 		{
-			//大爆炸
+			this.gameObject.SetActive (false);
 		}
 
 	}
 
 	void FixedUpdate () 
 	{
-		if (Input.GetButtonDown ("Fire1")) 
-		{
-			if (this.name == Goble_Player.playerName)
-			{
-				start_count = true;
-				use_skill = false;
+		if (!Goble_Player.gameover) {
+			if (Input.GetButtonDown ("Fire1")) {
+				if (this.name == Goble_Player.playerName) {
+					start_count = true;
+					use_skill = false;
+				}
 			}
-		}
 
-		if(Input.GetButtonUp("Fire1"))
-		{
-			if (this.name == Goble_Player.playerName) 
-			{
-				shoot ("normal");
-				start_count = false;
-				buttonTime = 0f;
-				SP += 0.05f;
-				use_skill = true;
+			if (Input.GetButtonUp ("Fire1")) {
+				if (this.name == Goble_Player.playerName) {
+					shoot ("normal");
+					start_count = false;
+					buttonTime = 0f;
+					SP += 0.05f;
+					use_skill = true;
+				}
 			}
-		}
 
-		if (Input.GetKeyUp(KeyCode.X) && use_skill) 
-		{
-			if(this.name == Goble_Player.playerName)
-				StartCoroutine(Filling());
-		}
-
-		if (Input.GetKeyUp(KeyCode.F) && use_skill) 
-		{
-			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
-			//{
-				//SP -= 0.5f;
-				shoot ("Fire");
-			//}
-		}
-		if (Input.GetKeyUp(KeyCode.V) && use_skill) 
-		{
-			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
-			//{
-			//SP -= 0.4f;
-			shoot ("10_V");
-			//}
-		}
-		if (Input.GetKeyUp(KeyCode.B) && use_skill) 
-		{
-			//if (this.name == Goble_Player.playerName /*&& SP>=0.5f*/)
-			//{
-			//SP -= 0.45f;
-			shoot ("10_H");
-			//}
-		}
-
-		if (start_count && buttonTime<1 )
-		{
-			buttonTime += Time.deltaTime;
-			if (buttonTime >= 1 && canshoot && ball_strong == false) {
-				ball_strong = true;
-				start_count = false;
-				//buttonTime = 0f;
-				wind_ins = Instantiate (wind_from_asset, Fire.transform.position, transform.rotation)as GameObject;
-			} else {
-				ball_strong = false;
+			if (Input.GetKeyUp (KeyCode.X) && use_skill && !isFilling) {
+				if (this.name == Goble_Player.playerName)
+					StartCoroutine (Filling ());
 			}
-		}
 
-		if (ball_strong && wind_ins != null)
-		{
-			wind_ins.transform.position = Fire.transform.position;
-		}
+			if (Input.GetKeyUp (KeyCode.F) && use_skill) {
+				if (this.name == Goble_Player.playerName && SP >= 0.5f) {
+					SP -= 0.5f;
+					shoot ("Fire");
+				}
+			}
+			if (Input.GetKeyUp (KeyCode.V) && use_skill) {
+				if (this.name == Goble_Player.playerName && SP >= 0.4f) {
+					SP -= 0.4f;
+					shoot ("10_V");
+				}
+			}
+			if (Input.GetKeyUp (KeyCode.B) && use_skill) {
+				if (this.name == Goble_Player.playerName && SP >= 0.45f) {
+					SP -= 0.45f;
+					shoot ("10_H");
+				}
+			}
 
-		if (AI) 
-		{
-			AI_filling ();
+			if (start_count && buttonTime < 1 && canshoot && Bullets_able_num != 0) {
+				buttonTime += Time.deltaTime;
+				if (buttonTime >= 1 && canshoot && ball_strong == false && Bullets_able_num != 0) {
+					ball_strong = true;
+					start_count = false;
+					//buttonTime = 0f;
+					wind_ins = Instantiate (wind_from_asset, Fire.transform.position, transform.rotation)as GameObject;
+				} else {
+					ball_strong = false;
+				}
+			}
+
+			if (ball_strong && wind_ins != null) {
+				wind_ins.transform.position = Fire.transform.position;
+			}
+
+			if (AI && canshoot) {
+				AI_filling ();
+			}
+		} else {
+			audioStop ();
 		}
 	}
 	//射擊相關
@@ -199,7 +190,7 @@ public class body : MonoBehaviour {
 					ball_strong = false;
 					marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*1.5f;//決定子彈威力
 					wind_ins.transform.parent = marble_ball_ins.transform;
-					Destroy (wind_ins,1.0f);
+					Destroy (wind_ins,1.5f);
 				}
 
 				marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
@@ -261,14 +252,21 @@ public class body : MonoBehaviour {
 	//裝填
 	public IEnumerator Filling()
 	{
-		if (Bullets_Max - Bullets_able_num > 0 )
+		if (!Goble_Player.gameover)
 		{
-			Bullets_able_num++;
-			canshoot = false;
-			yield return new WaitForSeconds (0.3f);
-			StartCoroutine(Filling());
-		} else {
-			canshoot = true;
+			if (Bullets_Max - Bullets_able_num > 0)
+			{
+				Bullets_able_num++;
+				canshoot = false;
+				isFilling = true;
+				yield return new WaitForSeconds (0.3f);
+				StartCoroutine (Filling ());
+			} 
+			else 
+			{
+				canshoot = true;
+				isFilling = false;
+			}
 		}
 	}
 
@@ -314,25 +312,28 @@ public class body : MonoBehaviour {
 	//AI自動射擊
 	private IEnumerator AI_shoot ()
 	{
-		if (AI_canshoot) 
-		{
-			//隨機射出子彈數量，若數量大於目前殘彈，則發射殘彈數
-			ran_shoot_num = (int)((Mathf.Floor (Random.Range (1.0f, 4.0f)) < Bullets_able_num) ? Bullets_able_num : Mathf.Floor (Random.Range (1.0f, 4.0f)));
 
-			shoot("normal");
-			AI_canshoot = false;
-			StartCoroutine(AI_shoot());
-		} 
-		else 
+		if (!Goble_Player.gameover) 
 		{
-			//隨機間格時間發射子彈
-			ran_shoot_time = Random.Range (0.5f, 3.0f); 
-			Debug.Log ("ran_shoot_time="+ran_shoot_time);
-			yield return new WaitForSeconds (ran_shoot_time);
-			AI_canshoot = true;
-			StartCoroutine(AI_shoot());
+			if (AI_canshoot) 
+			{
+				//隨機射出子彈數量，若數量大於目前殘彈，則發射殘彈數
+				ran_shoot_num = (int)((Mathf.Floor (Random.Range (1.0f, 4.0f)) < Bullets_able_num) ? Bullets_able_num : Mathf.Floor (Random.Range (1.0f, 4.0f)));
+
+				shoot ("normal");
+				AI_canshoot = false;
+				StartCoroutine (AI_shoot ());
+			} 
+			else 
+			{
+				//隨機間格時間發射子彈
+				ran_shoot_time = Random.Range (0.5f, 3.0f); 
+				Debug.Log ("ran_shoot_time=" + ran_shoot_time);
+				yield return new WaitForSeconds (ran_shoot_time);
+				AI_canshoot = true;
+				StartCoroutine (AI_shoot ());
+			}
 		}
-
 		//shoot("normal");
 	}
 	//AI隨機彈數自動填彈
@@ -343,7 +344,7 @@ public class body : MonoBehaviour {
 		{
 			StartCoroutine(Filling());
 			//隨機在子彈剩幾發時補充
-			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)ran_shoot_num)); 
+			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)Bullets_Max)); 
 		}
 	}
 }

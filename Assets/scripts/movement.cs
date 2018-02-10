@@ -26,6 +26,7 @@ public class movement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Goble_Player.gameover = false;
 		//Debug.Log ("movement="+Goble_Player.playerName);
 		if(Goble_Player.playerName == null)
 			Goble_Player.playerName = this.name;
@@ -49,53 +50,64 @@ public class movement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (this.name == Goble_Player.playerName) 
-		{
-			h = Input.GetAxis ("Horizontal");
-			isMove = (h != 0) ? true : false;
-			movecontroller (h, isMove);
-		}
 
-		if (this.GetComponent<body> ().AI) {
-			float tmp_dis = Mathf.Abs(goal_pos.x - this.transform.position.x);
-
-			if (goal_pos.x != this.transform.position.x && tmp_dis >= 0.01) {
-				if (goal_pos.x > this.transform.position.x)
-					h = 1;
-				else
-					h = -1;
-			} else {
-				h = 0;
-				RandomMove (0.5f);
+		if (!Goble_Player.gameover) {
+			if (this.name == Goble_Player.playerName && !Goble_Player.gameover) {
+				h = Input.GetAxis ("Horizontal");
+				isMove = (h != 0) ? true : false;
+				movecontroller (h, isMove);
 			}
 
-			/*Debug.Log ("goal_pos.x="+goal_pos.x);
+			if (this.GetComponent<body> ().AI && !Goble_Player.gameover) {
+				float tmp_dis = Mathf.Abs (goal_pos.x - this.transform.position.x);
+
+				if (goal_pos.x != this.transform.position.x && tmp_dis >= 0.01) {
+					if (goal_pos.x > this.transform.position.x)
+						h = 1;
+					else
+						h = -1;
+				} else {
+					h = 0;
+					RandomMove (0.5f);
+				}
+
+				/*Debug.Log ("goal_pos.x="+goal_pos.x);
 			Debug.Log ("this.x="+this.transform.position.x);
 			Debug.Log ("h="+h);*/
 
-			isMove = (h != 0) ? true : false;
-			movecontroller (h, isMove);
+				isMove = (h != 0) ? true : false;
+				movecontroller (h, isMove);
+			}
+		} else {
+			h = 0;
+			isMove = false;
+			ani.SetFloat ("horizontal", h);
+			ani.SetBool ("move", isMove);
+			currentBaseState = ani.GetCurrentAnimatorStateInfo(0);
 		}
 	}
 
 	private void movecontroller(float h, bool isMove)
 	{
-		ani.SetFloat ("horizontal", h);
-		ani.SetBool ("move", isMove);
-		currentBaseState = ani.GetCurrentAnimatorStateInfo(0);
-		rb.useGravity = true;
+		if (!Goble_Player.gameover) 
+		{
+			ani.SetFloat ("horizontal", h);
+			ani.SetBool ("move", isMove);
+			currentBaseState = ani.GetCurrentAnimatorStateInfo(0);
+			rb.useGravity = true;
 
-		velocity = new Vector3 (h, 0f, 0f);
-		velocity = transform.TransformDirection (velocity);
-		velocity *= moveSpeed;
+			velocity = new Vector3 (h, 0f, 0f);
+			velocity = transform.TransformDirection (velocity);
+			velocity *= moveSpeed;
 
-		transform.localPosition += velocity * Time.fixedDeltaTime;
+			transform.localPosition += velocity * Time.fixedDeltaTime;
 
-		if (isMove == true)
-			this.GetComponent<body>().moveAudio ();
-		else 
-			this.GetComponent<body>().moveAudio_stop ();
-		//Debug.Log (h);
+			if (isMove == true)
+				this.GetComponent<body>().moveAudio ();
+			else 
+				this.GetComponent<body>().moveAudio_stop ();
+			//Debug.Log (h);
+		}
 	}
 
 

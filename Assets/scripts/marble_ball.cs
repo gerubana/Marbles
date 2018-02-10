@@ -56,10 +56,17 @@ public class marble_ball : MonoBehaviour {
 			object_.GetComponent<body> ().HP -= damage;
 			object_.GetComponent<body> ().SP += damage;
 
-			if (!Skill) {
-				explosion ("normal");
-			} else {
-				explosion ("skill");
+			if (object_.GetComponent<body> ().HP > 0) 
+			{
+				if (!Skill) 
+					explosion ("normal");
+				else 
+					explosion ("skill");
+			}
+			else 
+			{
+				explosion ("gameover");
+				Goble_Player.gameover = true;
 			}
 
 			Destroy (gameObject);
