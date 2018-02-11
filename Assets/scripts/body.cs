@@ -85,6 +85,8 @@ public class body : MonoBehaviour {
 			//隨機在子彈剩幾發時補充
 			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)Bullets_Max)); 
 		}
+
+		GameObject.Find ("Time").GetComponent<time_script>().gameStart = true;
 	}
 	
 	// Update is called once per frame
@@ -170,6 +172,8 @@ public class body : MonoBehaviour {
 			}
 		} else {
 			audioStop ();
+			Invoke ("show_result",1.0f);
+			GameObject.Find ("Time").GetComponent<time_script>().stop_timing();
 		}
 	}
 	//射擊相關
@@ -318,7 +322,7 @@ public class body : MonoBehaviour {
 			if (AI_canshoot) 
 			{
 				//隨機射出子彈數量，若數量大於目前殘彈，則發射殘彈數
-				ran_shoot_num = (int)((Mathf.Floor (Random.Range (1.0f, 4.0f)) < Bullets_able_num) ? Bullets_able_num : Mathf.Floor (Random.Range (1.0f, 4.0f)));
+				ran_shoot_num = (int)((Mathf.Floor (Random.Range (1.0f, 5.0f)) < Bullets_able_num) ? Bullets_able_num : Mathf.Floor (Random.Range (1.0f, 5.0f)));
 
 				shoot ("normal");
 				AI_canshoot = false;
@@ -346,5 +350,10 @@ public class body : MonoBehaviour {
 			//隨機在子彈剩幾發時補充
 			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)Bullets_Max)); 
 		}
+	}
+
+	private void show_result()
+	{
+		UI_script.Result_view.SetActive (true);
 	}
 }

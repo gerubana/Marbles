@@ -12,6 +12,7 @@ public class UI_controller : MonoBehaviour {
 	public GameObject SP_emeny;
 	public GameObject Icon_emeny;
 	public GameObject Time;
+	public GameObject Result_view;
 
 
 	private GameObject player;
