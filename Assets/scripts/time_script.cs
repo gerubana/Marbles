@@ -9,6 +9,7 @@ public class time_script : MonoBehaviour {
 	public bool time_recorded = false;
 	public bool gameStart = false;
 	public string time_final = "";
+	public float Ready_time = 0;
 
 	private GameObject Player_obj;
 	private float tmp_time = 0;
@@ -17,8 +18,6 @@ public class time_script : MonoBehaviour {
 	private string sec = "00";
 	private string min = "00";
 	private string hour = "00";
-
-	private float Ready_time = 0;
 	private string num = "3";
 
 	// Use this for initialization
@@ -36,18 +35,21 @@ public class time_script : MonoBehaviour {
 			}
 		}
 
-		Ready_time += Time.deltaTime;
-		if (this.name == "Ready") {
+		if (this.name == "Ready" && !Goble_Player.gameStart) {
+			Ready_time += Time.deltaTime;
+
 			if (Ready_time <= 1) {
 				num = "3";
 			} else if (Ready_time <= 2) {
 				num = "2";
-			} else {
+			} else if (Ready_time <= 3) {
 				num = "1";
+			} else {
+				num = "Fire";
 			}
 
-			Debug.Log (Ready_time);
-			Debug.Log (num);
+			//Debug.Log (Ready_time);
+			//Debug.Log (num);
 			this.GetComponent<UILabel> ().text = num;
 		}
 	}

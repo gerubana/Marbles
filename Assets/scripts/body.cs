@@ -79,14 +79,14 @@ public class body : MonoBehaviour {
 		audioIsPlaying = true;
 		Bullets_Max = Bullets_able_num;
 
-		if (AI) 
+		/*if (AI) 
 		{
 			StartCoroutine(AI_shoot());
 			//隨機在子彈剩幾發時補充
 			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)Bullets_Max)); 
 		}
 
-		GameObject.Find ("Time").GetComponent<time_script>().gameStart = true;
+		GameObject.Find ("Time").GetComponent<time_script>().gameStart = true;*/
 	}
 	
 	// Update is called once per frame
@@ -105,11 +105,19 @@ public class body : MonoBehaviour {
 			this.gameObject.SetActive (false);
 		}
 
+		if(UI_script.Ready.GetComponent<time_script>().Ready_time >= 4 && AI)
+		{
+			UI_script.Ready.GetComponent<time_script> ().Ready_time = 0;
+			UI_script.Ready.SetActive (false);
+			Goble_Player.gameStart = true;
+			ReadyEnd_ToStart ();
+		}
+
 	}
 
 	void FixedUpdate () 
 	{
-		if (!Goble_Player.gameover) {
+		if (!Goble_Player.gameover && Goble_Player.gameStart) {
 			if (Input.GetButtonDown ("Fire1")) {
 				if (this.name == Goble_Player.playerName) {
 					start_count = true;
@@ -170,7 +178,9 @@ public class body : MonoBehaviour {
 			if (AI && canshoot) {
 				AI_filling ();
 			}
-		} else {
+		} 
+
+		if(Goble_Player.gameover){
 			audioStop ();
 			Invoke ("show_result",1.0f);
 			GameObject.Find ("Time").GetComponent<time_script>().stop_timing();
@@ -332,7 +342,7 @@ public class body : MonoBehaviour {
 			{
 				//隨機間格時間發射子彈
 				ran_shoot_time = Random.Range (0.5f, 3.0f); 
-				Debug.Log ("ran_shoot_time=" + ran_shoot_time);
+				//Debug.Log ("ran_shoot_time=" + ran_shoot_time);
 				yield return new WaitForSeconds (ran_shoot_time);
 				AI_canshoot = true;
 				StartCoroutine (AI_shoot ());
@@ -356,4 +366,16 @@ public class body : MonoBehaviour {
 	{
 		UI_script.Result_view.SetActive (true);
 	}
+
+	private void ReadyEnd_ToStart()
+	{
+		if (AI)
+		{
+			StartCoroutine(AI_shoot());
+			//隨機在子彈剩幾發時補充
+			ran_fill_num = (int)Mathf.Floor (Random.Range (0, (float)Bullets_Max));
+		}
+		GameObject.Find ("Time").GetComponent<time_script>().gameStart = true;
+	}
+
 }

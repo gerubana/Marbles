@@ -62,18 +62,27 @@ public class movement : MonoBehaviour {
 				float tmp_dis = Mathf.Abs (goal_pos.x - this.transform.position.x);
 
 				if (goal_pos.x != this.transform.position.x && tmp_dis >= 0.01) {
-					if (goal_pos.x > this.transform.position.x)
-						h = 1;
+					if (goal_pos.x > this.transform.position.x) {
+						if (h < 1) {
+							h += Time.deltaTime;
+						} else {
+							h = 1;
+						}
+					}
 					else
-						h = -1;
+						if (h > -1) {
+							h -= Time.deltaTime;
+						} else {
+							h = -1;
+						}
 				} else {
 					h = 0;
 					RandomMove (0.5f);
 				}
 
 				/*Debug.Log ("goal_pos.x="+goal_pos.x);
-			Debug.Log ("this.x="+this.transform.position.x);
-			Debug.Log ("h="+h);*/
+				Debug.Log ("this.x="+this.transform.position.x);
+				Debug.Log ("h="+h);*/
 
 				isMove = (h != 0) ? true : false;
 				movecontroller (h, isMove);
