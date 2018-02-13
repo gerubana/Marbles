@@ -48,6 +48,7 @@ public class body : MonoBehaviour {
 	private bool isFilling = false;
 	//UI
 	private UI_controller UI_script;
+	private show_battle_result result_;
 	//集氣
 	private bool ball_strong = false;
 	private bool start_count = false;
@@ -60,6 +61,10 @@ public class body : MonoBehaviour {
 	private int ran_fill_num; //隨機在子彈剩幾發時補充
 	private float ran_shoot_time; //隨機間格時間發射子彈
 	private bool AI_canshoot = false; 
+	private bool AI_StartShoot = false; 
+
+
+	private body player2;
 
 
 	// Use this for initialization
@@ -68,7 +73,7 @@ public class body : MonoBehaviour {
 		if(Goble_Player.playerName == null)
 			Goble_Player.playerName = this.name;
 		//Debug.Log (Goble_Player.playerName);
-		if (Goble_Player.playerName == this.name || Goble_Player.playerName == this.name)
+		if (Goble_Player.playerName == this.name || Goble_Player.player2Name == this.name)
 			AI = false;
 
 		UI_script = GameObject.Find("UI Root").GetComponent<UI_controller>();
@@ -87,6 +92,8 @@ public class body : MonoBehaviour {
 		}
 
 		GameObject.Find ("Time").GetComponent<time_script>().gameStart = true;*/
+
+		player2 = GameObject.Find("PlayerR").gameObject.GetComponent<body> ();
 	}
 	
 	// Update is called once per frame
@@ -105,12 +112,17 @@ public class body : MonoBehaviour {
 			this.gameObject.SetActive (false);
 		}
 
-		if(UI_script.Ready.GetComponent<time_script>().Ready_time >= 4 && AI)
+		if(UI_script.Ready.GetComponent<time_script>().Ready_time >= 4)
 		{
 			UI_script.Ready.GetComponent<time_script> ().Ready_time = 0;
 			UI_script.Ready.SetActive (false);
 			Goble_Player.gameStart = true;
+		}
+
+
+		if (AI && Goble_Player.gameStart && !AI_StartShoot) {
 			ReadyEnd_ToStart ();
+			AI_StartShoot = true;
 		}
 
 	}
@@ -365,6 +377,16 @@ public class body : MonoBehaviour {
 	private void show_result()
 	{
 		UI_script.Result_view.SetActive (true);
+		if (HP < player2.HP) {
+			result_.Win.SetActive (false);
+			result_.Draw.SetActive (false);
+		} else if (HP > player2.HP) {
+			result_.Lose.SetActive (false);
+			result_.Draw.SetActive (false);
+		} else {
+			result_.Win.SetActive (false);
+			result_.Lose.SetActive (false);
+		}
 	}
 
 	private void ReadyEnd_ToStart()

@@ -20,9 +20,14 @@ public class time_script : MonoBehaviour {
 	private string hour = "00";
 	private string num = "3";
 
+	private AudioSource audio;
+
 	// Use this for initialization
 	void Start () {
 		this.GetComponent<UILabel>().text = "00:10:00:00";
+		if(this.name == "Ready"){
+			audio = GetComponent<AudioSource> ();
+		}
 	}
 	
 	// Update is called once per frame
@@ -36,6 +41,9 @@ public class time_script : MonoBehaviour {
 		}
 
 		if (this.name == "Ready" && !Goble_Player.gameStart) {
+			if(!audio.isPlaying)
+				audio.Play ();
+			
 			Ready_time += Time.deltaTime;
 
 			if (Ready_time <= 1) {
@@ -49,7 +57,7 @@ public class time_script : MonoBehaviour {
 			}
 
 			//Debug.Log (Ready_time);
-			//Debug.Log (num);
+			//Debug.Log (audio);
 			this.GetComponent<UILabel> ().text = num;
 		}
 	}

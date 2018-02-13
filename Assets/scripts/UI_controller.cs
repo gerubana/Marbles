@@ -41,7 +41,6 @@ public class UI_controller : MonoBehaviour {
 
 		bullet_now = player_body_state.Bullets_able_num;
 		Bullet.GetComponent<UILabel> ().text = bullet_now.ToString() + " / " + bullet_max.ToString();
-
 	}
 
 	private void restart()

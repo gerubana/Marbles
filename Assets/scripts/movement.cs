@@ -31,7 +31,7 @@ public class movement : MonoBehaviour {
 		if(Goble_Player.playerName == null)
 			Goble_Player.playerName = this.name;
 		//Debug.Log ("movement="+Goble_Player.playerName);
-		if (Goble_Player.playerName == this.name || Goble_Player.playerName == this.name)
+		if (Goble_Player.playerName == this.name || Goble_Player.player2Name == this.name)
 			this.GetComponent<body>().AI = false;
 
 		//WWW player1_data = new WWW("http://gerubana.byethost4.com/play1.json");
@@ -40,12 +40,15 @@ public class movement : MonoBehaviour {
 
 		ani = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody>();
-		player = GameObject.Find(Goble_Player.playerName);
-		player_body_state = player.GetComponent<body> ();
-		moveSpeed = player_body_state.moveSpeed/10;
 
-		if (this.GetComponent<body> ().AI)
+		player_body_state = this.GetComponent<body>();
+		moveSpeed = player_body_state.moveSpeed/10; //之後要改成自己的名字(哪個使用者)
+
+		if (this.GetComponent<body> ().AI) 
+		{
 			RandomMove (0.5f);
+			moveSpeed = this.GetComponent<body>().moveSpeed/10;
+		}
 	}
 	
 	// Update is called once per frame
