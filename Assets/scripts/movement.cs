@@ -64,7 +64,7 @@ public class movement : MonoBehaviour {
 			if (this.GetComponent<body> ().AI && !Goble_Player.gameover) {
 				float tmp_dis = Mathf.Abs (goal_pos.x - this.transform.position.x);
 
-				if (goal_pos.x != this.transform.position.x && tmp_dis >= 0.01) {
+				if (goal_pos.x != this.transform.position.x && tmp_dis >= (0.01 * moveSpeed)) {
 					if (goal_pos.x > this.transform.position.x) {
 						if (h < 1) {
 							h += Time.deltaTime;

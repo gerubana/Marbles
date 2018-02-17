@@ -10,10 +10,10 @@ public class time_script : MonoBehaviour {
 	public bool gameStart = false;
 	public string time_final = "";
 	public float Ready_time = 0;
+	public float now_time = 0;
 
 	private GameObject Player_obj;
 	private float tmp_time = 0;
-	private float now_time = 0;
 	private string mil_sec = "00";
 	private string sec = "00";
 	private string min = "00";
@@ -75,6 +75,7 @@ public class time_script : MonoBehaviour {
 	}
 
 	public void stop_timing(){
+		time_stop = true;
 		time_final = hour+"小時"+min+"分"+sec+"秒"+mil_sec;
 	}
 

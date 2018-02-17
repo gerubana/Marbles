@@ -49,6 +49,7 @@ public class body : MonoBehaviour {
 	//UI
 	private UI_controller UI_script;
 	private show_battle_result result_;
+	private bool isShow = false;
 	//集氣
 	private bool ball_strong = false;
 	private bool start_count = false;
@@ -92,8 +93,10 @@ public class body : MonoBehaviour {
 		}
 
 		GameObject.Find ("Time").GetComponent<time_script>().gameStart = true;*/
-
 		player2 = GameObject.Find("PlayerR").gameObject.GetComponent<body> ();
+
+		if(AI)
+			player2 = GameObject.Find(Goble_Player.playerName).gameObject.GetComponent<body> ();
 	}
 	
 	// Update is called once per frame
@@ -193,6 +196,7 @@ public class body : MonoBehaviour {
 		} 
 
 		if(Goble_Player.gameover){
+			UI_script.Ready.GetComponent<time_script> ().stop_timing ();
 			audioStop ();
 			Invoke ("show_result",1.0f);
 			GameObject.Find ("Time").GetComponent<time_script>().stop_timing();
@@ -376,16 +380,30 @@ public class body : MonoBehaviour {
 
 	private void show_result()
 	{
-		UI_script.Result_view.SetActive (true);
-		if (HP < player2.HP) {
-			result_.Win.SetActive (false);
-			result_.Draw.SetActive (false);
-		} else if (HP > player2.HP) {
-			result_.Lose.SetActive (false);
-			result_.Draw.SetActive (false);
-		} else {
-			result_.Win.SetActive (false);
-			result_.Lose.SetActive (false);
+		if (!isShow) {
+			float HP1 = HP;
+			float HP2 = player2.HP;
+
+			if (AI) {
+				float tmpHP = HP1;
+				HP1 = HP2;
+				HP2 = tmpHP;
+			}
+
+			UI_script.Result_view.SetActive (true);
+			result_ = GameObject.Find ("Result").GetComponent<show_battle_result> ();
+
+			if (HP1 < HP2) {
+				result_.Win.SetActive (false);
+				result_.Draw.SetActive (false);
+			} else if (HP1 > HP2) {
+				result_.Lose.SetActive (false);
+				result_.Draw.SetActive (false);
+			} else {
+				result_.Win.SetActive (false);
+				result_.Lose.SetActive (false);
+			}
+			isShow = true;
 		}
 	}
 
