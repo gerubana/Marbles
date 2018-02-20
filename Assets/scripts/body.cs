@@ -396,12 +396,15 @@ public class body : MonoBehaviour {
 			if (HP1 < HP2) {
 				result_.Win.SetActive (false);
 				result_.Draw.SetActive (false);
+				result_.battleResult = "Lose";
 			} else if (HP1 > HP2) {
 				result_.Lose.SetActive (false);
 				result_.Draw.SetActive (false);
+				result_.battleResult = "Win";
 			} else {
 				result_.Win.SetActive (false);
 				result_.Lose.SetActive (false);
+				result_.battleResult = "Draw";
 			}
 			isShow = true;
 		}
