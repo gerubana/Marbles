@@ -249,6 +249,18 @@
  <Reference Include="JMOAssets">
  <HintPath>D:/Unity/Marbles/Assets/JMO Assets/Editor/JMOAssets.dll</HintPath>
  </Reference>
+ <Reference Include="I18N.CJK">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/I18N.CJK.dll</HintPath>
+ </Reference>
+ <Reference Include="I18N">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/I18N.dll</HintPath>
+ </Reference>
+ <Reference Include="I18N.West">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/I18N.West.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/System.Data.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">

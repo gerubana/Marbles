@@ -196,11 +196,16 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />
+     <Compile Include="Assets\scripts\Click.cs" />
+     <Compile Include="Assets\scripts\EventListener.cs" />
      <Compile Include="Assets\scripts\Goble_Player.cs" />
+     <Compile Include="Assets\scripts\MouseEvent.cs" />
+     <Compile Include="Assets\scripts\SQL_script.cs" />
      <Compile Include="Assets\scripts\ThirdPersonCamera.cs" />
      <Compile Include="Assets\scripts\UI_controller.cs" />
      <Compile Include="Assets\scripts\body.cs" />
      <Compile Include="Assets\scripts\marble_ball.cs" />
+     <Compile Include="Assets\scripts\member.cs" />
      <Compile Include="Assets\scripts\movement.cs" />
      <Compile Include="Assets\scripts\shootment_NotUse.cs" />
      <Compile Include="Assets\scripts\show_battle_result.cs" />
@@ -283,6 +288,18 @@
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ </Reference>
+ <Reference Include="I18N.CJK">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/I18N.CJK.dll</HintPath>
+ </Reference>
+ <Reference Include="I18N">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/I18N.dll</HintPath>
+ </Reference>
+ <Reference Include="I18N.West">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/I18N.West.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Data">
+ <HintPath>D:/Unity/Marbles/Assets/Plugins/System.Data.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
