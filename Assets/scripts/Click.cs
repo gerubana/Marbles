@@ -32,17 +32,20 @@ public class Click : MonoBehaviour {
 			member_con.SendLoginInfo ();
 			return;
 		case "login_Btn_join":
-			member_con.MemberJoin ();
+			member_con.BTN_MemberJoin ();
 			return;
 		case "FB" :
 		case "Google":
 			member_con.OutsideLogin (gameObject.name);
 			return;
 		case "chk_Btn_yes":
-			member_con.MemberChk ();
+			member_con.BTN_MemberChk ();
 			return;
 		case "chk_Btn_no":
-			member_con.MemberJoin ();
+			member_con.BTN_MemberJoin ();
+			return;
+		case "join_Btn_ok":
+			member_con.SendJoinInfo ();
 			return;
 		
 		}
