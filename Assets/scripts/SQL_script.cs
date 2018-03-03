@@ -10,7 +10,7 @@ public class SQL_script {
 	//SqlConnection con = new SqlConnection("Data Source=192.168.1.109;Initial Catalog=Maze;Persist Security Info=True;User ID=sa;Password=Gerubana05240"); 
 	SqlConnection con = new SqlConnection("server=192.168.1.111;user=sa;database=Marble;uid=sa;password=Gerubana05240;");
 
-	public string MemberJoin(string nickname, string password, string mail){
+	public string MemberJoin(string nickname, string password, string mail, string type, string outside_id){
 		
 		try
 		{
@@ -20,6 +20,8 @@ public class SQL_script {
 			sqlComm.Parameters.Add("@Member_name", SqlDbType.NVarChar, 20).Value = nickname;
 			sqlComm.Parameters.Add("@Member_password", SqlDbType.NVarChar, 256).Value = password;
 			sqlComm.Parameters.Add("@Member_mail", SqlDbType.NVarChar, 30).Value = mail;
+			sqlComm.Parameters.Add("@type", SqlDbType.NVarChar, 10).Value = type;
+			sqlComm.Parameters.Add("@outside_id", SqlDbType.NVarChar, 30).Value = outside_id;
 
 			con.Open();
 			sqlComm.ExecuteNonQuery();

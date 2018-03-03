@@ -112,12 +112,12 @@ public class member : MonoBehaviour {
 		join_pw = Join_member.transform.Find ("login_pw").GetComponent<UIInput>().value;
 
 		string result = covertMd5 (join_pw);
-		Debug.Log ("id = " + login_email + "; pw = " + result + ";");
+		Debug.Log ("name = " + join_name + "; email = " + join_email + "; pw = " + result + ";");
 
 		btn_connect_clean ();
 
 		Login_MSG.SetActive (true);
-		Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成功加入會員，請先登入";
+		Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成功加入會員，請重新登入";
 	}
 
 

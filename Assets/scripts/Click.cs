@@ -20,6 +20,7 @@ public class Click : MonoBehaviour {
 
 	private void ObjectOnClick(GameObject go)
 	{
+		ObjectOnHover (go, false);
 		switch(gameObject.name)
 		{
 		case "Login_btn":
