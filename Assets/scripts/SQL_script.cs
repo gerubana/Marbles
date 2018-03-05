@@ -5,7 +5,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 
-public class SQL_script {
+public class SQL_script : MonoBehaviour {
 
 	//SqlConnection con = new SqlConnection("Data Source=192.168.1.109;Initial Catalog=Maze;Persist Security Info=True;User ID=sa;Password=Gerubana05240"); 
 	SqlConnection con = new SqlConnection("server=192.168.1.111;user=sa;database=Marble;uid=sa;password=Gerubana05240;");
@@ -25,7 +25,8 @@ public class SQL_script {
 
 			con.Open();
 			sqlComm.ExecuteNonQuery();
-			return("success");
+            return("success");
+            con.Close();
 
 		}
 		catch (SqlException ex)
@@ -35,36 +36,62 @@ public class SQL_script {
 		}
 	}
 
-	public DataSet GetMazeRecord(string filter_sort, string search_keyword, string filter_type, int row_max){
-
-
-		if (filter_type == "全部顯示") {
-			filter_type = "";
-		}
+	public string get_check_login(string user_mail, string user_pw){
 
 		try
 		{
-			SqlDataAdapter sqlComm = new SqlDataAdapter("lp_get_MazeData", con);
-			sqlComm.SelectCommand.CommandType = CommandType.StoredProcedure;
+			SqlCommand sqlComm = new SqlCommand("lp_checkLogin", con);
+			sqlComm.CommandType = CommandType.StoredProcedure;
 			//參數設定部份
-			sqlComm.SelectCommand.Parameters.Add("@reserve_case", SqlDbType.NVarChar, 100).Value = filter_sort;
-			sqlComm.SelectCommand.Parameters.Add("@search_case", SqlDbType.NVarChar, 100).Value = search_keyword;
-			sqlComm.SelectCommand.Parameters.Add("@filter_case", SqlDbType.NVarChar, 100).Value = filter_type;
-			sqlComm.SelectCommand.Parameters.Add("@row_case", SqlDbType.Int).Value = row_max;
+			sqlComm.Parameters.Add("@Member_mail", SqlDbType.NVarChar, 30).Value = user_mail;
+			sqlComm.Parameters.Add("@Member_pw", SqlDbType.NVarChar, 256).Value = user_pw;
 
-			DataSet myDS = new DataSet();
+			SqlParameter myret = new SqlParameter("@result", SqlDbType.VarChar, 12);
+			myret.Direction = ParameterDirection.Output;
+			sqlComm.Parameters.Add(myret);
 
+			string result = "";
 			con.Open();
-			sqlComm.Fill(myDS,"lp_get_MazeData");
+			sqlComm.ExecuteNonQuery();
+			result = (string)myret.Value.ToString();
 			con.Close();
 
-			return myDS;
+			return result;
 
 		}
 		catch (SqlException ex)
 		{
 			Debug.Log("Error " + ex.Number + " has occurred: " + ex.Message);
-			return null;
+			return "error";
 		}
 	}
+
+    public string get_check_mail(string user_mail){
+
+        try
+        {
+            SqlCommand sqlComm = new SqlCommand("lp_checkMail", con);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+            //參數設定部份
+            sqlComm.Parameters.Add("@Member_mail", SqlDbType.NVarChar, 30).Value = user_mail;
+
+            SqlParameter myret = new SqlParameter("@result", SqlDbType.VarChar, 12);
+            myret.Direction = ParameterDirection.Output;
+            sqlComm.Parameters.Add(myret);
+
+            string result = "";
+            con.Open();
+            sqlComm.ExecuteNonQuery();
+            result = (string)myret.Value.ToString();
+            con.Close();
+
+            return result;
+
+        }
+        catch (SqlException ex)
+        {
+            Debug.Log("Error " + ex.Number + " has occurred: " + ex.Message);
+            return "error";
+        }
+    }
 }

@@ -9,7 +9,7 @@ public class EventListener : MonoBehaviour {
 
 	public VoidDelegate onClick;
 	public BoolDelegate onHover;
-	public BoolDelegate onPress;
+    public BoolDelegate onPress;
 
 	void OnClick()
 	{
@@ -27,7 +27,7 @@ public class EventListener : MonoBehaviour {
 	{
 		if (onPress != null)
 			onPress (gameObject, isPressed);
-	}
+    }
 
 	public static EventListener Get(GameObject go)
 	{
