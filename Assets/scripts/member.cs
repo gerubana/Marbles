@@ -17,6 +17,8 @@ public class member : MonoBehaviour {
 	public GameObject Login_MSG;
     public GameObject Btn_close;
     public GameObject Msg_join; 
+    public GameObject Msg_login; 
+    public GameObject Msg_link; 
     public GameObject Logout_btn; 
 
 	private string login_email; 
@@ -26,11 +28,12 @@ public class member : MonoBehaviour {
 	private string join_email; 
 	private string join_pw; 
 
-	private string member_line_email; 
-	private string member_line_pw; 
+	private string member_link_email; 
+	private string member_link_pw; 
 
-	private string member_type;
-    private string outside_id;
+	private string member_type = "";
+    private string outside_id = "";
+    private string outside_name;
 
     //tmp
     private string member_no;
@@ -71,13 +74,15 @@ public class member : MonoBehaviour {
 		Login_MSG.SetActive (false);
         Btn_close.SetActive (false);
         Msg_join.SetActive (false);
+        Msg_login.SetActive(false);
+        Msg_link.SetActive(false);
         login_email = ""; 
         login_pw = ""; 
         join_name = ""; 
         join_email = ""; 
         join_pw = ""; 
-        member_line_email = "";  
-        member_line_pw = ""; 
+        member_link_email = "";  
+        member_link_pw = ""; 
         member_type = ""; 
         outside_id = ""; 
         Login_screen.transform.Find("login_id").GetComponent<UIInput>().value = login_email;
@@ -97,59 +102,105 @@ public class member : MonoBehaviour {
 		Login_plug_link.SetActive (false);
         Login_MSG.SetActive (false);
         Msg_join.SetActive (false);
+        Msg_login.SetActive(false);
+        Msg_link.SetActive(false);
 	}
 
-	public void SendLoginInfo()
+    public void getMemberLoginInfo()
+    {
+        login_email = Login_screen.transform.Find ("login_id").GetComponent<UIInput>().value;
+        login_pw = Login_screen.transform.Find ("login_pw").GetComponent<UIInput>().value;
+        SendLoginInfo(login_email, login_pw, Msg_login);
+    }
+
+    public void getMemberLinkInfo()
+    {
+        member_link_email = Login_plug_link.transform.Find ("login_id").GetComponent<UIInput>().value;
+        member_link_pw = Login_plug_link.transform.Find ("login_pw").GetComponent<UIInput>().value;
+        SendLoginInfo(member_link_email, member_link_pw, Msg_link);
+    }
+
+    public void SendLoginInfo(string mail, string password, GameObject tmpObj)
 	{
-		login_email = Login_screen.transform.Find ("login_id").GetComponent<UIInput>().value;
-		login_pw = Login_screen.transform.Find ("login_pw").GetComponent<UIInput>().value;
+        string pw = covertMd5 (password);
 
-		string pw = covertMd5 (login_pw);
-
-		string result = SQL.get_check_login (login_email,pw);
-        Debug.Log ("id = " + login_email + "; pw = " + pw + "; result = " + result);
-
-		btn_connect_clean ();
-
-		Login_MSG.SetActive (true);
-
+        string result = SQL.get_check_login (member_type,outside_id,mail,pw);
+        Debug.Log ("type = " + member_type + "; id = " + outside_id + "; mail = " + mail + "; pw = " + pw + "; result = " + result);
 
 		if (result == "noMember") 
-		{
-			Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "無 此 會 員!!";
+        {
+            tmpObj.SetActive(true);
+            tmpObj.GetComponent<UILabel>().text = "* 無此會員!!";
+            return;
 		}
 		else if (result == "PWerror") 
-		{
-			Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "密 碼 錯 誤!!";
+        {
+            tmpObj.SetActive(true);
+            tmpObj.GetComponent<UILabel>().text = "* 密碼錯誤!!";
+            return;
 		} 
 		else if (result == "error") 
-		{
-			Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "連 線 異 常!!";
+        {
+            tmpObj.SetActive(true);
+            tmpObj.GetComponent<UILabel>().text = "* 連線異常!!";
+            return;
 		} 
 		else
-		{
+        {
+            btn_connect_clean ();
+            Login_MSG.SetActive (true);
             member_no = result;
 			Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
 		}
-
 	}
 
 	public void OutsideLogin(string type)
 	{
-		//btn_connect_clean ();
-		//Login_plug_chk.SetActive (true);
 		switch(type)
 		{
-		case "FB":
+            case "FB":
             //Login_plug_chk.SetActive (true);
-            this.GetComponent<member_plugs>().CallFBLogin();
-			return;
-		case "Google":
-			//Login_plug_chk.SetActive (true);
-			return;
+                this.GetComponent<member_plugs>().CallFBLogin();
+                callbackWait("請 稍 後~");
+			    return;
+		    case "Google":
+    			//Login_plug_chk.SetActive (true);
+    			return;
 
 		}
 	}
+
+    public void callbackWait(string msg)
+    {
+        btn_connect_clean ();
+        Login_MSG.SetActive (true);
+        Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = msg;
+    }
+
+    public void outside_callback(string type, string id, string name)
+    {
+        member_type = type;
+        outside_id = id;
+        outside_name = name;
+
+        Debug.Log("type : " + member_type + "; id : " + outside_id + "; name : " + outside_name);
+
+        string result = SQL.member_login_from_outside(member_type, outside_id);
+        Debug.Log ("result = " + result);
+
+        if (result == "noMem")
+        {
+            btn_connect_clean();
+            Login_plug_chk.SetActive(true);
+        }
+        else
+        {
+            btn_connect_clean();
+            Login_MSG.SetActive (true);
+            member_no = result;
+            Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
+        }
+    }
 
 	public void BTN_MemberJoin()
 	{
@@ -157,18 +208,17 @@ public class member : MonoBehaviour {
         Join_member.SetActive(true);
     }
 
-	public void BTN_MemberChk()
-	{
-		btn_connect_clean ();
-		Login_plug_link.SetActive (true);
-	}
+    public void BTN_MemberChk()
+    {
+        btn_connect_clean ();
+        Login_plug_link.SetActive (true);
+    }
 
 	public void SendJoinInfo()
 	{
 		join_name = Join_member.transform.Find ("login_nick").GetComponent<UIInput>().value;
 		join_email = Join_member.transform.Find ("login_id").GetComponent<UIInput>().value;
         join_pw = Join_member.transform.Find ("login_pw").GetComponent<UIInput>().value;
-
 
         bool mail_chk = chk_mail(join_email);
 
@@ -177,7 +227,6 @@ public class member : MonoBehaviour {
             Msg_join.GetComponent<UILabel>().text = "* Email格式錯誤";
             return;
         }
-
 
 		string result = covertMd5 (join_pw);
         Debug.Log ("name = " + join_name + "; email = " + join_email + "; pw = " + result + ";" + " mail_chk = " + mail_chk);
@@ -210,7 +259,43 @@ public class member : MonoBehaviour {
             Msg_join.SetActive(true);
             Msg_join.GetComponent<UILabel>().text = "* 此信箱已使用";
         }
-	}
+    }
+
+    public void ConcatMember()
+    {
+        member_link_email = Login_plug_link.transform.Find ("login_id").GetComponent<UIInput>().value;
+        member_link_pw = Login_plug_link.transform.Find ("login_pw").GetComponent<UIInput>().value;
+
+        string pw = covertMd5 (member_link_pw);
+
+        string result = SQL.get_check_login (member_type,outside_id,login_email,pw);
+
+        if (result == "noMember") 
+        {
+            Msg_login.SetActive(true);
+            Msg_login.GetComponent<UILabel>().text = "* 無此會員!!";
+            return;
+        }
+        else if (result == "PWerror") 
+        {
+            Msg_login.SetActive(true);
+            Msg_login.GetComponent<UILabel>().text = "* 密碼錯誤!!";
+            return;
+        } 
+        else if (result == "error") 
+        {
+            Msg_login.SetActive(true);
+            Msg_login.GetComponent<UILabel>().text = "* 連線異常!!";
+            return;
+        } 
+        else
+        {
+            btn_connect_clean ();
+            Login_MSG.SetActive (true);
+            member_no = result;
+            Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
+        }
+    }
 
     public void SignOut()
     {

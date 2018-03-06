@@ -31,7 +31,7 @@ public class Click : MonoBehaviour {
     			member_con.CloseAllScreen ();
     			return;
     		case "login_Btn_login":
-    			member_con.SendLoginInfo ();
+                member_con.getMemberLoginInfo ();
     			return;
     		case "login_Btn_join":
     			member_con.BTN_MemberJoin ();
@@ -46,8 +46,11 @@ public class Click : MonoBehaviour {
     		case "chk_Btn_no":
     			member_con.BTN_MemberJoin ();
     			return;
-    		case "join_Btn_ok":
-    			member_con.SendJoinInfo ();
+            case "join_Btn_ok":
+                member_con.SendJoinInfo ();
+                return;
+            case "link_Btn_ok":
+                member_con.getMemberLinkInfo ();
                 return;
             case "Logout_btn":
                 member_con.SignOut ();

@@ -25,8 +25,8 @@ public class SQL_script : MonoBehaviour {
 
 			con.Open();
 			sqlComm.ExecuteNonQuery();
-            return("success");
             con.Close();
+            return("success");
 
 		}
 		catch (SqlException ex)
@@ -36,17 +36,19 @@ public class SQL_script : MonoBehaviour {
 		}
 	}
 
-	public string get_check_login(string user_mail, string user_pw){
+    public string get_check_login(string type, string id, string user_mail, string user_pw){
 
 		try
 		{
 			SqlCommand sqlComm = new SqlCommand("lp_checkLogin", con);
 			sqlComm.CommandType = CommandType.StoredProcedure;
-			//參數設定部份
+            //參數設定部份
+            sqlComm.Parameters.Add("@type", SqlDbType.NVarChar, 10).Value = type;
+            sqlComm.Parameters.Add("@id", SqlDbType.NVarChar, 30).Value = id;
 			sqlComm.Parameters.Add("@Member_mail", SqlDbType.NVarChar, 30).Value = user_mail;
 			sqlComm.Parameters.Add("@Member_pw", SqlDbType.NVarChar, 256).Value = user_pw;
 
-			SqlParameter myret = new SqlParameter("@result", SqlDbType.VarChar, 12);
+			SqlParameter myret = new SqlParameter("@result", SqlDbType.VarChar, 30);
 			myret.Direction = ParameterDirection.Output;
 			sqlComm.Parameters.Add(myret);
 
@@ -75,7 +77,37 @@ public class SQL_script : MonoBehaviour {
             //參數設定部份
             sqlComm.Parameters.Add("@Member_mail", SqlDbType.NVarChar, 30).Value = user_mail;
 
-            SqlParameter myret = new SqlParameter("@result", SqlDbType.VarChar, 12);
+            SqlParameter myret = new SqlParameter("@result", SqlDbType.VarChar, 30);
+            myret.Direction = ParameterDirection.Output;
+            sqlComm.Parameters.Add(myret);
+
+            string result = "";
+            con.Open();
+            sqlComm.ExecuteNonQuery();
+            result = (string)myret.Value.ToString();
+            con.Close();
+
+            return result;
+
+        }
+        catch (SqlException ex)
+        {
+            Debug.Log("Error " + ex.Number + " has occurred: " + ex.Message);
+            return "error";
+        }
+    }
+
+    public string member_login_from_outside(string type, string id){
+
+        try
+        {
+            SqlCommand sqlComm = new SqlCommand("lp_memberLoginPlus", con);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+            //參數設定部份
+            sqlComm.Parameters.Add("@type", SqlDbType.NVarChar, 30).Value = type;
+            sqlComm.Parameters.Add("@id", SqlDbType.NVarChar, 30).Value = id;
+
+            SqlParameter myret = new SqlParameter("@result", SqlDbType.VarChar, 6);
             myret.Direction = ParameterDirection.Output;
             sqlComm.Parameters.Add(myret);
 

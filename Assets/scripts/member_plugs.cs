@@ -112,9 +112,15 @@ public class member_plugs : MonoBehaviour {
 
     public void CallFBLogin()
     {
-        var perms = new List<string>() { "public_profile", "email"};
+        /*var perms = new List<string>() { "email","public_profile", "user_friends"};
         Debug.Log("FB login");
-        FB.LogInWithReadPermissions(perms, AuthCallback);
+        FB.LogInWithReadPermissions(perms, AuthCallback);*/
+
+        FB.LogInWithReadPermissions (
+            new List<string>(){"public_profile", "email", "user_friends"},
+            AuthCallback
+        );
+
 
     }
 
@@ -128,6 +134,8 @@ public class member_plugs : MonoBehaviour {
             // Print current access token's User ID
             Debug.Log(aToken.UserId);
 
+            FetchFBProfile();
+
             // Print current access token's granted permissions
             foreach (string perm in aToken.Permissions)
             {
@@ -137,7 +145,26 @@ public class member_plugs : MonoBehaviour {
         else
         {
             Debug.Log("User cancelled login");
+            this.GetComponent<member>().callbackWait("取 消 串 接");
         }
+    }
+
+    private void FetchFBProfile()
+    {
+        FB.API("/me", HttpMethod.GET, FetchFBProfile_callback);
+    }
+
+    private void FetchFBProfile_callback(IGraphResult result)
+    {
+        IDictionary dict = Json.Deserialize(result.RawResult) as IDictionary;
+        Debug.Log(result.RawResult);
+        /*Debug.Log(dict["name"]);
+        Debug.Log(dict["id"]);*/
+
+        string id = dict["id"].ToString();
+        string name = dict["name"].ToString();
+
+        this.GetComponent<member>().outside_callback("FB", id, name);
     }
 
     public void Share()
@@ -166,15 +193,6 @@ public class member_plugs : MonoBehaviour {
             // Share succeeded without postID
             Debug.Log("ShareLink success!");
         }
-    }
-    // Use this for initialization
-    void Start () {
-
-    }
-
-    // Update is called once per frame
-    void Update () {
-
     }
 
 }

@@ -31,7 +31,6 @@ Global
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
 		$2.IndentSwitchBody = True
-		$2.IndentCaseBody = False
 		$2.IndentBlocksInsideExpressions = True
 		$2.AnonymousMethodBraceStyle = NextLine
 		$2.PropertyBraceStyle = NextLine
