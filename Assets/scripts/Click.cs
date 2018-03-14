@@ -55,6 +55,10 @@ public class Click : MonoBehaviour {
             case "Logout_btn":
                 member_con.SignOut ();
                 return;
+            case "Hangar":
+                Globe.loadName = "Hangar";
+                Application.LoadLevel ("Loading");
+                return;
 
 		
 		}

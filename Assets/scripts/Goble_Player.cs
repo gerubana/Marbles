@@ -5,6 +5,8 @@ using System.IO;
 
 public class Goble_Player {
 
+    public static string member_no;
+
 	public static string playerName;
 	public static string player2Name;
 

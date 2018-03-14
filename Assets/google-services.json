@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "247054376552",
+    "firebase_url": "https://marble-ball-d53ef.firebaseio.com",
+    "project_id": "marble-ball-d53ef",
+    "storage_bucket": "marble-ball-d53ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247054376552:android:469cb16a7e0049b0",
+        "android_client_info": {
+          "package_name": "gerubana.marble.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247054376552-re5dnek6c90ls0qaq47bg0u24n1qsobm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFKfF1_tsiHm6NlFLf_33TbHgHr3IJJb4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -36,7 +36,7 @@ public class member : MonoBehaviour {
     private string outside_name;
 
     //tmp
-    private string member_no;
+    //private string member_no;
 
 	SQL_script SQL;
 
@@ -47,7 +47,7 @@ public class member : MonoBehaviour {
 
     void Update()
     {
-        if (member_no == null || member_no == "")
+        if (Goble_Player.member_no == null || Goble_Player.member_no == "")
         {
             Login_btn.SetActive(true);
             Logout_btn.SetActive(false);
@@ -149,7 +149,7 @@ public class member : MonoBehaviour {
         {
             btn_connect_clean ();
             Login_MSG.SetActive (true);
-            member_no = result;
+            Goble_Player.member_no = result;
 			Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
 		}
 	}
@@ -197,7 +197,7 @@ public class member : MonoBehaviour {
         {
             btn_connect_clean();
             Login_MSG.SetActive (true);
-            member_no = result;
+            Goble_Player.member_no = result;
             Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
         }
     }
@@ -292,14 +292,14 @@ public class member : MonoBehaviour {
         {
             btn_connect_clean ();
             Login_MSG.SetActive (true);
-            member_no = result;
+            Goble_Player.member_no = result;
             Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
         }
     }
 
     public void SignOut()
     {
-        member_no = "";
+        Goble_Player.member_no = "";
     }
 
 	private string covertMd5(string value)

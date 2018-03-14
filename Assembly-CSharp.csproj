@@ -281,13 +281,17 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Particle Ribbon\Scripts\ReverseNormals.cs" />
      <Compile Include="Assets\scripts\Click.cs" />
+     <Compile Include="Assets\scripts\Click_hargar.cs" />
      <Compile Include="Assets\scripts\EventListener.cs" />
+     <Compile Include="Assets\scripts\Globe_sceneName.cs" />
      <Compile Include="Assets\scripts\Goble_Player.cs" />
+     <Compile Include="Assets\scripts\Loading_script.cs" />
      <Compile Include="Assets\scripts\MouseEvent.cs" />
      <Compile Include="Assets\scripts\SQL_script.cs" />
      <Compile Include="Assets\scripts\ThirdPersonCamera.cs" />
      <Compile Include="Assets\scripts\UI_controller.cs" />
      <Compile Include="Assets\scripts\body.cs" />
+     <Compile Include="Assets\scripts\hangar_controller.cs" />
      <Compile Include="Assets\scripts\marble_ball.cs" />
      <Compile Include="Assets\scripts\member.cs" />
      <Compile Include="Assets\scripts\member_plugs.cs" />
@@ -319,6 +323,7 @@
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (TextureClip).shader" />
      <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Header.txt" />
      <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Add Scroll.shader" />
+     <None Include="Assets\Plugins\Android\Firebase\AndroidManifest.xml" />
      <None Include="Assets\JMO Assets\WarFX\!WarFX Readme.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 3.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored 1.shader" />
@@ -375,6 +380,12 @@
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Compat">
+ <HintPath>D:/Unity/Marbles/Assets/Parse/Plugins/Unity.Compat.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Tasks">
+ <HintPath>D:/Unity/Marbles/Assets/Parse/Plugins/Unity.Tasks.dll</HintPath>
  </Reference>
  <Reference Include="I18N.CJK">
  <HintPath>D:/Unity/Marbles/Assets/Plugins/I18N.CJK.dll</HintPath>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>247054376552-4udi5tqnnktvq4kujks41u5ko4u12l65.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.247054376552-4udi5tqnnktvq4kujks41u5ko4u12l65</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDsyM65xNdz9wWpzIg7McBCy5so6LMCt1M</string>
+	<key>GCM_SENDER_ID</key>
+	<string>247054376552</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>gerubana.marble.ios</string>
+	<key>PROJECT_ID</key>
+	<string>marble-ball-d53ef</string>
+	<key>STORAGE_BUCKET</key>
+	<string>marble-ball-d53ef.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:247054376552:ios:b1c6d9e7d45cf684</string>
+	<key>DATABASE_URL</key>
+	<string>https://marble-ball-d53ef.firebaseio.com</string>
+</dict>
+</plist>
