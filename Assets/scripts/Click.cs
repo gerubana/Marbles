@@ -26,39 +26,39 @@ public class Click : MonoBehaviour {
 		{
     		case "Login_btn":
     			member_con.ShowLoginScreen();
-    			return;
+                break;
     		case "Close_member":
     			member_con.CloseAllScreen ();
-    			return;
+                break;
     		case "login_Btn_login":
                 member_con.getMemberLoginInfo ();
-    			return;
+                break;
     		case "login_Btn_join":
     			member_con.BTN_MemberJoin ();
-    			return;
+                break;
     		case "FB" :
     		case "Google":
     			member_con.OutsideLogin (gameObject.name);
-    			return;
+                break;
     		case "chk_Btn_yes":
     			member_con.BTN_MemberChk ();
-    			return;
+                break;
     		case "chk_Btn_no":
     			member_con.BTN_MemberJoin ();
-    			return;
+                break;
             case "join_Btn_ok":
                 member_con.SendJoinInfo ();
-                return;
+                break;
             case "link_Btn_ok":
                 member_con.getMemberLinkInfo ();
-                return;
+                break;
             case "Logout_btn":
                 member_con.SignOut ();
-                return;
+                break;
             case "Hangar":
                 Globe.loadName = "Hangar";
                 Application.LoadLevel ("Loading");
-                return;
+                break;
 
 		
 		}

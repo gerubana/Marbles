@@ -26,40 +26,40 @@ public class Click_hargar : MonoBehaviour {
 		{
             case "attack+":
                 con.attack_add_change("add");
-                return;
+                break;
             case "attack-":
                 con.attack_add_change("minus");
-                return;
+                break;
             case "HP+":
                 con.HP_add_change("add");
-                return;
+                break;
             case "HP-":
                 con.HP_add_change("minus");
-                return;
+                break;
             case "moveSpeed+":
                 con.MS_add_change("add");
-                return;
+                break;
             case "moveSpeed-":
                 con.MS_add_change("minus");
-                return;
+                break;
             case "shootSpeed+":
                 con.SS_add_change("add");
-                return;
+                break;
             case "shootSpeed-":
                 con.SS_add_change("minus");
-                return;
+                break;
             case "fillingSpeed+":
                 con.FS_add_change("add");
-                return;
+                break;
             case "fillingSpeed-":
                 con.FS_add_change("minus");
-                return;
+                break;
             case "max_marble_ball+":
                 con.MMB_add_change("add");
-                return;
+                break;
             case "max_marble_ball-":
                 con.MMB_add_change("minus");
-                return;
+                break;
     		
 		
 		}

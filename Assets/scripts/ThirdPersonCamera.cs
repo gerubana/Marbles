@@ -28,7 +28,6 @@ public class ThirdPersonCamera : MonoBehaviour {
 	{
 		upPos = GameObject.Find (Goble_Player.playerName+"/pos_up").transform;
 		backPos = GameObject.Find (Goble_Player.playerName+"/pos_back").transform;
-		// 各参照の初期化
 		//Debug.Log(upPos);
 		//Invoke ("setStartPos",2.5f);
 		isShake = false;

@@ -215,7 +215,7 @@ public class SQL_script : MonoBehaviour {
 
         try
         {
-            SqlCommand sqlComm = new SqlCommand("lp_checkMail", con);
+            SqlCommand sqlComm = new SqlCommand("get_and_set_money", con);
             sqlComm.CommandType = CommandType.StoredProcedure;
             //參數設定部份
             sqlComm.Parameters.Add("@type", SqlDbType.NVarChar, 10).Value = type;

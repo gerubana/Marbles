@@ -94,6 +94,7 @@ public class member : MonoBehaviour {
         Login_plug_link.transform.Find("login_pw").GetComponent<UIInput>().value = login_email;
 	}
 
+    #region 關閉所有會員相關畫面
 	public void btn_connect_clean()
 	{
 		Login_screen.SetActive (false);
@@ -105,6 +106,7 @@ public class member : MonoBehaviour {
         Msg_login.SetActive(false);
         Msg_link.SetActive(false);
 	}
+    #endregion
 
     public void getMemberLoginInfo()
     {
@@ -120,6 +122,7 @@ public class member : MonoBehaviour {
         SendLoginInfo(member_link_email, member_link_pw, Msg_link);
     }
 
+    #region 會員登入
     public void SendLoginInfo(string mail, string password, GameObject tmpObj)
 	{
         string pw = covertMd5 (password);
@@ -153,7 +156,9 @@ public class member : MonoBehaviour {
 			Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
 		}
 	}
+    #endregion
 
+    #region 外部會員登入&串接
 	public void OutsideLogin(string type)
 	{
 		switch(type)
@@ -162,10 +167,10 @@ public class member : MonoBehaviour {
             //Login_plug_chk.SetActive (true);
                 this.GetComponent<member_plugs>().CallFBLogin();
                 callbackWait("請 稍 後~");
-			    return;
+                break;
 		    case "Google":
     			//Login_plug_chk.SetActive (true);
-    			return;
+                break;
 
 		}
 	}
@@ -202,6 +207,44 @@ public class member : MonoBehaviour {
         }
     }
 
+    public void ConcatMember()
+    {
+        member_link_email = Login_plug_link.transform.Find ("login_id").GetComponent<UIInput>().value;
+        member_link_pw = Login_plug_link.transform.Find ("login_pw").GetComponent<UIInput>().value;
+
+        string pw = covertMd5 (member_link_pw);
+
+        string result = SQL.get_check_login (member_type,outside_id,login_email,pw);
+
+        if (result == "noMember") 
+        {
+            Msg_login.SetActive(true);
+            Msg_login.GetComponent<UILabel>().text = "* 無此會員!!";
+            return;
+        }
+        else if (result == "PWerror") 
+        {
+            Msg_login.SetActive(true);
+            Msg_login.GetComponent<UILabel>().text = "* 密碼錯誤!!";
+            return;
+        } 
+        else if (result == "error") 
+        {
+            Msg_login.SetActive(true);
+            Msg_login.GetComponent<UILabel>().text = "* 連線異常!!";
+            return;
+        } 
+        else
+        {
+            btn_connect_clean ();
+            Login_MSG.SetActive (true);
+            Goble_Player.member_no = result;
+            Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
+        }
+    }
+
+    #endregion
+
 	public void BTN_MemberJoin()
 	{
         btn_connect_clean ();
@@ -214,6 +257,7 @@ public class member : MonoBehaviour {
         Login_plug_link.SetActive (true);
     }
 
+    #region 傳送註冊資料
 	public void SendJoinInfo()
 	{
 		join_name = Join_member.transform.Find ("login_nick").GetComponent<UIInput>().value;
@@ -260,42 +304,7 @@ public class member : MonoBehaviour {
             Msg_join.GetComponent<UILabel>().text = "* 此信箱已使用";
         }
     }
-
-    public void ConcatMember()
-    {
-        member_link_email = Login_plug_link.transform.Find ("login_id").GetComponent<UIInput>().value;
-        member_link_pw = Login_plug_link.transform.Find ("login_pw").GetComponent<UIInput>().value;
-
-        string pw = covertMd5 (member_link_pw);
-
-        string result = SQL.get_check_login (member_type,outside_id,login_email,pw);
-
-        if (result == "noMember") 
-        {
-            Msg_login.SetActive(true);
-            Msg_login.GetComponent<UILabel>().text = "* 無此會員!!";
-            return;
-        }
-        else if (result == "PWerror") 
-        {
-            Msg_login.SetActive(true);
-            Msg_login.GetComponent<UILabel>().text = "* 密碼錯誤!!";
-            return;
-        } 
-        else if (result == "error") 
-        {
-            Msg_login.SetActive(true);
-            Msg_login.GetComponent<UILabel>().text = "* 連線異常!!";
-            return;
-        } 
-        else
-        {
-            btn_connect_clean ();
-            Login_MSG.SetActive (true);
-            Goble_Player.member_no = result;
-            Login_MSG.transform.Find ("Label").GetComponent<UILabel> ().text = "成 功 登 入!!";
-        }
-    }
+    #endregion
 
     public void SignOut()
     {
