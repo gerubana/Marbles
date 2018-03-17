@@ -62,26 +62,26 @@ public class Click : MonoBehaviour {
 
 		
 		}
-		Debug.Log (gameObject.name + " : Click");
+		//Debug.Log (gameObject.name + " : Click");
 	}
 
 	private void ObjectOnPress(GameObject go, bool isPress)
 	{
-		Debug.Log (gameObject.name + " : Press : " + isPress);
+		//Debug.Log (gameObject.name + " : Press : " + isPress);
 	}
 
 	private void ObjectOnHover(GameObject go, bool isHover)
 	{
 		UITexture tmpUI = go.GetComponent<UITexture> ();
         if (tmpUI != null && isHover)
-            tmpUI.color = new Color(255.0f, 195.0f, 0f);
+            tmpUI.color = new Color(255.0f, 195.0f, 0f, 255.0f);
         else if (tmpUI != null && !isHover)
         {
             foreach (GameObject btn in GameObject.FindGameObjectsWithTag("btn"))
             {
-                btn.GetComponent<UITexture> ().color = new Color(255.0f, 255.0f, 255.0f);
+                btn.GetComponent<UITexture> ().color = new Color(255.0f, 255.0f, 255.0f, 255.0f);
             }
-            tmpUI.color =  new Color(255.0f, 255.0f, 255.0f);
+            tmpUI.color =  new Color(255.0f, 255.0f, 255.0f, 255.0f);
         }
     }
 }
