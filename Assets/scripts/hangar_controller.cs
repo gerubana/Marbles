@@ -20,6 +20,10 @@ public class hangar_controller : MonoBehaviour {
     public GameObject[] isuse;
     public GameObject prev;
     public GameObject next;
+    public GameObject up_area;
+    public GameObject lock_area;
+    public GameObject pop;
+    public GameObject Alert_label;
 
     //抓取顯示數值資料
     /*private float attack_val;
@@ -70,10 +74,10 @@ public class hangar_controller : MonoBehaviour {
     private float new_fillingSpeed_val;
     private float new_max_marble_ball_val;
 
-    private bool tmp_skill1_state;
-    private bool tmp_skill2_state;
-    private bool tmp_skill3_state;
-    private bool tmp_aim_state;
+    private string new_skill1_state;
+    private string new_skill2_state;
+    private string new_skill3_state;
+    private string new_aim_state;
     #endregion
 
     //顯示資料
@@ -103,6 +107,11 @@ public class hangar_controller : MonoBehaviour {
     private int[] ball_pay;
 
     //暫存
+    private bool tmp_skill1_state;
+    private bool tmp_skill2_state;
+    private bool tmp_skill3_state;
+    private bool tmp_aim_state;
+
     private int now_page;
     private int tmp_monay;
     private int pay_money=0;
@@ -110,6 +119,9 @@ public class hangar_controller : MonoBehaviour {
     private int machine_count;
     private bool is_change = false;
     private bool move_right = false;
+    private bool Lock = false;
+    private bool isPOP = false;
+    private bool send_ok = false;
     private float changeSpeed = 0.1f;
     private Vector3[] movePos = new Vector3[3];
     private List<int> lockMachineNum;
@@ -153,6 +165,24 @@ public class hangar_controller : MonoBehaviour {
         //儲存機體資料，跑完會自動跑升級用計算加成數的比例，需要有頁數才能用
         setMachinDefaultData();
 
+
+        if (lockMachineNum.Count > 0)
+        {
+            for(int i = 0; i<lockMachineNum.Count; i++)
+            {
+                if (lockMachineNum[i] != now_page)
+                {
+                    Lock = false;
+                    up_area.SetActive(true);
+                }
+                else
+                {
+                    Lock = true;
+                    up_area.SetActive(false);
+                }
+            }
+        }
+
         movePos[0] = new Vector3(2.0f, 0.15f, -0.7f);
         movePos[1] = new Vector3(0f, 0.15f, -0.7f);
         movePos[2] = new Vector3(-2.0f, 0.15f, -0.7f);
@@ -165,15 +195,26 @@ public class hangar_controller : MonoBehaviour {
         total_rank = (int)Mathf.Floor((attack_rank + HP_rank + moveSpeed_rank) / 3);
         GameObject.Find("Rank").GetComponent<UILabel>().text = "Code:"+ now_page.ToString("00") +"   Rank " + total_rank.ToString();
 
-        if (now_page == isuse_tmp)
+
+        if (Lock)
         {
             isuse[0].SetActive(false);
-            isuse[1].SetActive(true);
+            isuse[1].SetActive(false);
+            lock_area.SetActive(true);
         }
         else
         {
-            isuse[0].SetActive(true);
-            isuse[1].SetActive(false);
+            lock_area.SetActive(false);
+            if (now_page == isuse_tmp)
+            {
+                isuse[0].SetActive(false);
+                isuse[1].SetActive(true);
+            }
+            else
+            {
+                isuse[0].SetActive(true);
+                isuse[1].SetActive(false);
+            }
         }
 
         if (now_page == 0)
@@ -205,6 +246,7 @@ public class hangar_controller : MonoBehaviour {
         }
     }
 
+    #region 機體控制(移動、旋轉)
     private void machine_rotation(GameObject machine_obj)
     {
         if(!is_change)
@@ -226,7 +268,9 @@ public class hangar_controller : MonoBehaviour {
             is_change = false;
         }
     }
+    #endregion
 
+    #region 切換機體
     public void change_machine(string dir)
     {
         if(!is_change)
@@ -249,12 +293,32 @@ public class hangar_controller : MonoBehaviour {
             }
 
             is_change = true;
+
+            if (lockMachineNum.Count > 0)
+            {
+                for(int i = 0; i<lockMachineNum.Count; i++)
+                {
+                    if (lockMachineNum[i] != now_page)
+                    {
+                        Lock = false;
+                        up_area.SetActive(true);
+                    }
+                    else
+                    {
+                        Lock = true;
+                        up_area.SetActive(false);
+                    }
+                }
+            }
+
             setMachinDefaultData();//重新載入機體資料
-            data_reset();//資料清除
+            popup_close();
         }
         
     }
+    #endregion
 
+    #region 從資料庫抓取資料
     private void getMachinAllData()
     {
         ds = SQL.get_machine_data("000001"/*Goble_Player.member_no*/, null, null, null);
@@ -266,8 +330,14 @@ public class hangar_controller : MonoBehaviour {
             if (ds.Tables[0].Rows[i]["isLock"].ToString() == "Y")
                 lockMachineNum.Add(int.Parse(ds.Tables[0].Rows[i]["machine_type"].ToString()));
         }
-        Debug.Log(lockMachineNum[0]);
+
+        if (lockMachineNum.Count > 0)
+        {
+            Debug.Log("鎖住機體代號" + lockMachineNum[0]);
+        }
     }
+    #endregion
+
     #region 讀出機體資料，預設時及改變機體時使用
     private void setMachinDefaultData()
     {
@@ -304,8 +374,20 @@ public class hangar_controller : MonoBehaviour {
         Debug.Log("fillingSpeed:"+fillingSpeed_val+","+fillingSpeed_rank);
         Debug.Log("max_marble_ball:"+max_marble_ball_val+","+max_marble_ball_rank);
         Debug.Log("SKILL:"+skill1_state+","+skill2_state+","+skill3_state+","+aim_state);*/
-        ShowMachineState();
+
+        data_reset();//資料填入清除
         setMachinLevelUpData();
+
+        if (lockMachineNum.Count > 0)
+        {
+            for(int i = 0; i<lockMachineNum.Count; i++)
+            {
+                if (lockMachineNum[i] != now_page)
+                {
+                    ShowMachineState();
+                }
+            }
+        }
     }
 
     private void setMachinLevelUpData()
@@ -361,6 +443,13 @@ public class hangar_controller : MonoBehaviour {
         tmp_monay = int.Parse(tmp_string);
 
         Debug.Log(tmp_string);
+    }
+
+    private void sendMoneyToDatabase(string new_money)
+    {
+        string tmp_string = "";
+        tmp_string = SQL.get_and_set_money("set", "000001"/*Goble_Player.member_no*/, new_money);
+        //Debug.Log(tmp_string);
     }
 
     /* note
@@ -567,7 +656,7 @@ public class hangar_controller : MonoBehaviour {
 
             tmp_val = int.Parse(val.GetComponent<UIInput>().value);
             int tmp_rank = rank + tmp_val;
-            Debug.Log("max_rank:"+max_rank+" rank:"+tmp_rank+" tmp_val:"+tmp_val);
+            //Debug.Log("max_rank:"+max_rank+" rank:"+tmp_rank+" tmp_val:"+tmp_val);
             if (max_rank == 100)
             {
                 result = moneyCount(1, rank, tmp_val);
@@ -740,16 +829,30 @@ public class hangar_controller : MonoBehaviour {
         Debug.Log(result);
     }
 
+    #region 解鎖機體
+    public void change_Unlock_machine()
+    {
+        isuse_tmp = now_page;
+        string machine_tmp = now_page.ToString("00");
+        string result = SQL.set_machine_data("000001"/*Goble_Player.member_no*/,machine_tmp,"","","","","","","","","","","","","","","","","","","","Y");
+        Debug.Log(result);
+    }
+    #endregion
+
     public void send_data_ok()
     {
         if (pay_money > 0)
         {
             if (pay_money > tmp_monay)
             {
-                //跑出視窗"所持有的金額不夠喔!!"
+                popup("所持有的金額不夠喔!!", false);
             }
             else
             {
+                //改變金額
+                int n_money = tmp_monay - pay_money;
+                sendMoneyToDatabase(n_money.ToString());
+
                 //比對資料差異
                 new_total_rank = (int)Mathf.Floor((new_attack_rank + new_HP_rank + new_moveSpeed_rank) / 3);
                 new_attack_rank = (new_attack_val == 0) ? attack_rank : new_attack_rank;
@@ -759,31 +862,70 @@ public class hangar_controller : MonoBehaviour {
                 new_fillingSpeed_rank = (new_fillingSpeed_val == 0) ? fillingSpeed_rank : new_fillingSpeed_rank;
                 new_max_marble_ball_rank = (new_max_marble_ball_val == 0) ? max_marble_ball_rank : new_max_marble_ball_rank;
 
-                new_attack_val = (new_attack_rank == attack_rank)? attack_val: new_attack_val;
-                new_HP_val = (new_HP_rank == HP_rank)? HP_val: new_HP_val;
-                new_moveSpeed_val = (new_moveSpeed_rank == moveSpeed_rank)? moveSpeed_val: new_moveSpeed_val;
-                new_shootSpeed_val = (new_shootSpeed_rank == shootSpeed_rank)? shootSpeed_val: new_shootSpeed_val;
-                new_fillingSpeed_val = (new_fillingSpeed_rank == fillingSpeed_rank)? fillingSpeed_val: new_fillingSpeed_val;
-                new_max_marble_ball_val = (new_max_marble_ball_rank == max_marble_ball_rank)? max_marble_ball_val: new_max_marble_ball_val;
+                new_attack_val = (new_attack_rank == attack_rank) ? attack_val : new_attack_val;
+                new_HP_val = (new_HP_rank == HP_rank) ? HP_val : new_HP_val;
+                new_moveSpeed_val = (new_moveSpeed_rank == moveSpeed_rank) ? moveSpeed_val : new_moveSpeed_val;
+                new_shootSpeed_val = (new_shootSpeed_rank == shootSpeed_rank) ? shootSpeed_val : new_shootSpeed_val;
+                new_fillingSpeed_val = (new_fillingSpeed_rank == fillingSpeed_rank) ? fillingSpeed_val : new_fillingSpeed_val;
+                new_max_marble_ball_val = (new_max_marble_ball_rank == max_marble_ball_rank) ? max_marble_ball_val : new_max_marble_ball_val;
 
                 tmp_skill1_state = skill1_state ? skill1_state : tmp_skill1_state;
                 tmp_skill2_state = skill2_state ? skill2_state : tmp_skill2_state;
                 tmp_skill3_state = skill3_state ? skill3_state : tmp_skill3_state;
                 tmp_aim_state = aim_state ? skill1_state : tmp_aim_state;
-               
-                Debug.Log("Update - attack => " + new_attack_rank + "," + new_attack_val);
-                Debug.Log("Update - HP     => " + new_HP_rank + "," + new_HP_val);
-                Debug.Log("Update - MoveS  => " + new_moveSpeed_rank + "," + new_moveSpeed_val);
-                Debug.Log("Update - ShootS => " + new_shootSpeed_rank + "," + new_shootSpeed_val);
-                Debug.Log("Update - FillS  => " + new_fillingSpeed_rank + "," + new_fillingSpeed_val);
-                Debug.Log("Update - Max    => " + new_max_marble_ball_rank + "," + new_max_marble_ball_val);
-                Debug.Log("Update - Rank   => " + new_total_rank);
-                Debug.Log("Update - S1     => " + tmp_skill1_state);
-                Debug.Log("Update - S2     => " + tmp_skill2_state);
-                Debug.Log("Update - S3     => " + tmp_skill3_state);
-                Debug.Log("Update - Aim    => " + tmp_aim_state);
+
+                new_skill1_state = tmp_skill1_state ? "Y" : "N";
+                new_skill2_state = tmp_skill2_state ? "Y" : "N";
+                new_skill3_state = tmp_skill3_state ? "Y" : "N";
+                new_aim_state = tmp_aim_state ? "Y" : "N";
+           
+//                Debug.Log("Update - attack => " + new_attack_rank + "," + new_attack_val);
+//                Debug.Log("Update - HP     => " + new_HP_rank + "," + new_HP_val);
+//                Debug.Log("Update - MoveS  => " + new_moveSpeed_rank + "," + new_moveSpeed_val);
+//                Debug.Log("Update - ShootS => " + new_shootSpeed_rank + "," + new_shootSpeed_val);
+//                Debug.Log("Update - FillS  => " + new_fillingSpeed_rank + "," + new_fillingSpeed_val);
+//                Debug.Log("Update - Max    => " + new_max_marble_ball_rank + "," + new_max_marble_ball_val);
+//                Debug.Log("Update - Rank   => " + new_total_rank);
+//                Debug.Log("Update - S1     => " + new_skill1_state);
+//                Debug.Log("Update - S2     => " + new_skill2_state);
+//                Debug.Log("Update - S3     => " + new_skill3_state);
+//                Debug.Log("Update - Aim    => " + new_aim_state);
+
+
                 //送出資料
+                string machine_tmp = now_page.ToString("00");
+                string result = SQL.set_machine_data("000001"/*Goble_Player.member_no*/, machine_tmp, new_attack_val.ToString(), new_attack_rank.ToString(), new_HP_val.ToString()
+                , new_HP_rank.ToString(), new_moveSpeed_val.ToString(), new_moveSpeed_rank.ToString(), new_shootSpeed_val.ToString(), new_shootSpeed_rank.ToString()
+                , new_fillingSpeed_val.ToString(), new_fillingSpeed_rank.ToString(), new_max_marble_ball_val.ToString(), new_max_marble_ball_rank.ToString()
+                , new_skill1_state, new_skill2_state, new_skill3_state, null, new_aim_state, new_total_rank.ToString(), null, null);
+                Debug.Log(result);
+
+                //完成後重新整理顯示資料
+                getMachinAllData();//重新到資料庫抓最新資料
+                setMachinDefaultData();//重新載入機體資料
+                moneyDataGet();//$$重抓
             }
         }
     }
+
+
+    #region 彈跳視窗
+    public void popup(string str, bool needOK)
+    {
+        if (!isPOP)
+        {
+            Debug.Log(str);
+            Alert_label.GetComponent<UILabel>().text = str;
+            pop.SetActive(true);
+            isPOP = true;
+        }
+    }
+
+    public void popup_close()
+    {
+        pop.SetActive(false);
+        isPOP = false;
+        data_reset();
+    }
+    #endregion
 }

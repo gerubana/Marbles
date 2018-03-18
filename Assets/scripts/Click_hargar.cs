@@ -100,6 +100,16 @@ public class Click_hargar : MonoBehaviour {
             case "send_data":
                 con.send_data_ok();
                 break;
+            case "Lock_icon":
+                con.popup("須通過最終關卡，才能解鎖", false);
+                break;
+            case "Close_btn":
+                con.popup_close();
+                break;
+            case "Home":
+                Globe.loadName = "Main";
+                Application.LoadLevel ("Loading");
+                break;
 
 		
 		}
@@ -108,35 +118,42 @@ public class Click_hargar : MonoBehaviour {
 
 	private void ObjectOnPress(GameObject go, bool isPress)
 	{
-        //Debug.Log (gameObject.name + " : Press : " + isPress);
-        UITexture tmpUI = go.GetComponent<UITexture> ();
-        if (tmpUI != null && isPress)
-            tmpUI.color = Color.red;
-        else if (tmpUI != null && !isPress)
+        if (gameObject.name != "Lock_icon")
         {
-            foreach (GameObject btn in GameObject.FindGameObjectsWithTag("btn"))
+            //Debug.Log (gameObject.name + " : Press : " + isPress);
+            UITexture tmpUI = go.GetComponent<UITexture>();
+            if (tmpUI != null && isPress)
+                tmpUI.color = Color.red;
+            else if (tmpUI != null && !isPress)
             {
-                btn.GetComponent<UITexture>().color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                foreach (GameObject btn in GameObject.FindGameObjectsWithTag("btn"))
+                {
+                    btn.GetComponent<UITexture>().color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                }
+                tmpUI.color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
             }
-            tmpUI.color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
         }
 	}
 
 	private void ObjectOnHover(GameObject go, bool isHover)
-	{
-        UITexture tmpUI = go.GetComponent<UITexture> ();
-        if (tmpUI != null && isHover)
+    {
+        if (gameObject.name != "Lock_icon")
         {
-            tmp_color = tmpUI.color;
-            tmpUI.color = new Color(255.0f, 255.0f, 255.0f, 255.0f);
-        }
-        else if (tmpUI != null && !isHover)
-        {
-            foreach (GameObject btn in GameObject.FindGameObjectsWithTag("btn"))
+            UITexture tmpUI = go.GetComponent<UITexture>();
+            if (tmpUI != null && isHover)
             {
-                btn.GetComponent<UITexture>().color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                tmp_color = tmpUI.color;
+
+                tmpUI.color = new Color(255.0f, 255.0f, 255.0f, 255.0f);
             }
-            tmpUI.color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+            else if (tmpUI != null && !isHover)
+            {
+                foreach (GameObject btn in GameObject.FindGameObjectsWithTag("btn"))
+                {
+                    btn.GetComponent<UITexture>().color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                }
+                tmpUI.color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+            }
         }
     }
 }
