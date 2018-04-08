@@ -13,9 +13,9 @@ public class marble_ball : MonoBehaviour {
 	//產生爆炸效果
 	private GameObject Fire_smoke_ins;
 
-	private float speed;
+    public float speed;
 	private GameObject player;
-	private body player_body_state;
+	//private body player_body_state;
 	private float damage;
 	private float Max_hp;
 	private float tmp_hp;
@@ -31,10 +31,10 @@ public class marble_ball : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		UI_script = GameObject.Find("UI Root").GetComponent<UI_controller>();
-		player = GameObject.Find(Goble_Player.playerName);
-		player_body_state = player.GetComponent<body> ();
+		//player = GameObject.Find(Goble_Player.playerName);
+		//player_body_state = player.GetComponent<body> ();
 		camera_script = GameObject.Find("Main Camera").GetComponent<ThirdPersonCamera>();
-		speed = player_body_state.shoot_speed;
+		//speed = player_body_state.shootSpeed;
 		Destroy (this.gameObject, 2.0f);
 	}
 
@@ -71,7 +71,7 @@ public class marble_ball : MonoBehaviour {
 
 			Destroy (gameObject);
 
-			if(object_.name == Goble_Player.playerName)
+            if(object_.name == Goble_Player.playerName)
 				camera_script.shakeCamera (0.5f);
 		} 
 		else if (object_.tag == "ball") 

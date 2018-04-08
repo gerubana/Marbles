@@ -46,6 +46,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Editor\ArrayTools.cs" />
+     <Compile Include="Assets\Editor\BytesAndOffset.cs" />
+     <Compile Include="Assets\Editor\CrawledDataUnpacker.cs" />
+     <Compile Include="Assets\Editor\Crawler.cs" />
+     <Compile Include="Assets\Editor\HighLevelAPI.cs" />
+     <Compile Include="Assets\Editor\Inspector.cs" />
+     <Compile Include="Assets\Editor\LowLevelAPI.cs" />
+     <Compile Include="Assets\Editor\ManagedHeapExtensions.cs" />
+     <Compile Include="Assets\Editor\MemoryProfilerWindow.cs" />
+     <Compile Include="Assets\Editor\PackedManagedObject.cs" />
+     <Compile Include="Assets\Editor\PackedMemorySnapshotUtility.cs" />
+     <Compile Include="Assets\Editor\PrimitiveValueReader.cs" />
+     <Compile Include="Assets\Editor\ShortestPathToRootFinder.cs" />
+     <Compile Include="Assets\Editor\StringTools.cs" />
+     <Compile Include="Assets\Editor\TreeMapView.cs" />
+     <Compile Include="Assets\Editor\Treemap\Group.cs" />
+     <Compile Include="Assets\Editor\Treemap\ITreemapRenderable.cs" />
+     <Compile Include="Assets\Editor\Treemap\Item.cs" />
+     <Compile Include="Assets\Editor\Treemap\Tests\TreemapTests.cs" />
+     <Compile Include="Assets\Editor\Treemap\Utility.cs" />
+     <Compile Include="Assets\Editor\TypeTools.cs" />
+     <Compile Include="Assets\Editor\ZoomArea.cs" />
      <Compile Include="Assets\Facebook\Editor\FacebookBuild.cs" />
      <Compile Include="Assets\Facebook\Editor\FacebookPostprocess.cs" />
      <Compile Include="Assets\Facebook\Editor\FacebookSettingsEditor.cs" />
@@ -152,6 +174,7 @@
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (TextureClip).shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (TextureClip).shader" />
+     <None Include="Assets\Editor\JsonDotNet20\Newtonsoft.Json.xml" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored 2.shader" />
      <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Particle AddSoft A8.shader" />
      <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Alpha-Specular TintColor.shader" />
@@ -182,6 +205,7 @@
      <None Include="Assets\JMO Assets\!JMO Assets Readme.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
+     <None Include="Assets\Editor\JsonDotNet20\license.txt" />
      <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Multiply Soft Scroll.shader" />
      <None Include="Assets\JMO Assets\WarFX\Shaders\WFX_S Particle Multiply A8.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text.shader" />
@@ -201,6 +225,7 @@
      <None Include="Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
      <None Include="Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
      <None Include="Assets\NGUI\Examples\Resources\Localization.txt" />
+     <None Include="Assets\Editor\JsonDotNet20\readme.txt" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
@@ -255,8 +280,14 @@
  <Reference Include="UnityEditor.Android.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.WebGL.Extensions">
+ <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="Newtonsoft.Json">
+ <HintPath>D:/Unity/Marbles/Assets/Editor/JsonDotNet20/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="JMOAssets">
  <HintPath>D:/Unity/Marbles/Assets/JMO Assets/Editor/JMOAssets.dll</HintPath>

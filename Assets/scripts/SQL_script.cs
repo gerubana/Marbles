@@ -7,8 +7,8 @@ using System.Data.SqlClient;
 
 public class SQL_script : MonoBehaviour {
 
-	//SqlConnection con = new SqlConnection("Data Source=192.168.1.109;Initial Catalog=Maze;Persist Security Info=True;User ID=sa;Password=Gerubana05240"); 
-	SqlConnection con = new SqlConnection("server=192.168.1.111;user=sa;database=Marble;uid=sa;password=Gerubana05240;");
+    //SqlConnection con = new SqlConnection("server=192.168.1.111;user=sa;database=Marble;uid=sa;password=Gerubana05240;");
+    SqlConnection con = new SqlConnection("server=172.20.10.2;user=sa;database=Marble;uid=sa;password=Gerubana05240;");
 
 	public string MemberJoin(string nickname, string password, string mail, string type, string outside_id){
 		

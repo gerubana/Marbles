@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class body : MonoBehaviour {
 	//基本數值
-	public float shoot_speed = 10f; 
+	public float shootSpeed = 10f; 
 	public float moveSpeed = 10f; 
 	public float fillSpeed = 0.3f; 
 	public float HP = 1.0f;
 	public float SP = 0; //max 100
 	public float attack = 200f; //base 20  
 	public float Max_hp = 500f; //base 500 
-	public int Bullets_able_num = 15; 
+    public int Bullets_able_num = 15; 
+    public float moveRange = 1.0f; 
+    public bool[] skill_list = new bool[3];
+    public bool aim = false; 
 	//技能 1.單體大絕 *2.5 (SP-50) 2.單體連發 10*0.2 (SP-40) 3.同時擊發 10*1 (SP-35/40)
 	/*
 	 攻擊力設定調整 --> 原先 20(up0.5 MAX120) 改為 200(up5 MAX999)  約160等
@@ -67,13 +70,12 @@ public class body : MonoBehaviour {
 
 	private body player2;
 
-
 	// Use this for initialization
 	void Start () {
 		//Debug.Log (Goble_Player.playerName);
 		if(Goble_Player.playerName == null)
 			Goble_Player.playerName = this.name;
-		//Debug.Log (Goble_Player.playerName);
+		Debug.Log (Goble_Player.playerName);
 		if (Goble_Player.playerName == this.name || Goble_Player.player2Name == this.name)
 			AI = false;
 
@@ -93,10 +95,13 @@ public class body : MonoBehaviour {
 		}
 
 		GameObject.Find ("Time").GetComponent<time_script>().gameStart = true;*/
-		player2 = GameObject.Find("PlayerR").gameObject.GetComponent<body> ();
+        
 
 		if(AI)
-			player2 = GameObject.Find(Goble_Player.playerName).gameObject.GetComponent<body> ();
+			player2 = GameObject.Find(Goble_Player.playerName).gameObject.GetComponent<body>();
+        else
+            player2 = GameObject.Find("AI(AI)").gameObject.GetComponent<body>();
+
 	}
 	
 	// Update is called once per frame
@@ -145,7 +150,6 @@ public class body : MonoBehaviour {
 					shoot ("normal");
 					start_count = false;
 					buttonTime = 0f;
-					SP += 0.05f;
 					use_skill = true;
 				}
 			}
@@ -156,21 +160,18 @@ public class body : MonoBehaviour {
 			}
 
 			if (Input.GetKeyUp (KeyCode.F) && use_skill) {
-				if (this.name == Goble_Player.playerName && SP >= 0.5f) {
-					SP -= 0.5f;
-					shoot ("Fire");
+                if (this.name == Goble_Player.playerName && SP >= 0.5f && skill_list[0]) {
+                    shoot ("skill1");
 				}
 			}
 			if (Input.GetKeyUp (KeyCode.V) && use_skill) {
-				if (this.name == Goble_Player.playerName && SP >= 0.4f) {
-					SP -= 0.4f;
-					shoot ("10_V");
+                if (this.name == Goble_Player.playerName && SP >= 0.4f && skill_list[1]) {
+                    shoot ("skill2");
 				}
 			}
 			if (Input.GetKeyUp (KeyCode.B) && use_skill) {
-				if (this.name == Goble_Player.playerName && SP >= 0.45f) {
-					SP -= 0.45f;
-					shoot ("10_H");
+                if (this.name == Goble_Player.playerName && SP >= 0.45f && skill_list[2]) {
+                    shoot ("skill3");
 				}
 			}
 
@@ -209,11 +210,13 @@ public class body : MonoBehaviour {
 		if (skill_name == "normal") 
 		{
 			if (Bullets_able_num != 0 && canshoot) 
-			{
+            {
+                SP += 0.05f;
 				marble_ball_ins = Instantiate (marble_ball, Fire.transform.position, transform.rotation)as GameObject;
 				Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack;//決定子彈威力
-				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+                marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+                marble_ball_ins.GetComponent<marble_ball> ().speed = shootSpeed;
 
 				if(wind_ins)
 				{
@@ -223,7 +226,7 @@ public class body : MonoBehaviour {
 					Destroy (wind_ins,1.5f);
 				}
 
-				marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+				marble_ball_ins.transform.Translate (0, 0, shootSpeed * Time.fixedDeltaTime);
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 
 				Bullets_able_num--;
@@ -233,27 +236,31 @@ public class body : MonoBehaviour {
 				canshoot = false;
 			}
 		}
-		else if (skill_name == "Fire") 
-		{
+        else if (skill_name == "skill1") 
+        {
+            SP -= 0.5f;
 			marble_ball_ins = Instantiate (marble_FireBall, Fire.transform.position, transform.rotation)as GameObject;
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
 			marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*5;//決定子彈威力
-			marble_ball_ins.GetComponent<marble_ball> ().Skill = true;//是否為必殺彈
-			marble_ball_ins.transform.Translate (0, 0, shoot_speed * Time.fixedDeltaTime);
+            marble_ball_ins.GetComponent<marble_ball> ().Skill = true;//是否為必殺彈
+            marble_ball_ins.GetComponent<marble_ball> ().speed = shootSpeed;
+			marble_ball_ins.transform.Translate (0, 0, shootSpeed * Time.fixedDeltaTime);
 			Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 			if(wind_ins)
 			{
 				Destroy (wind_ins);
 			}
 		} 
-		else if (skill_name == "10_V") 
-		{
+        else if (skill_name == "skill2") 
+        {
+            SP -= 0.4f;
 			for (int tmpNum = 0; tmpNum < 10; tmpNum++)
 			{
 				Vector3 tmpV3 = new Vector3 (0, 0, tmpNum * 0.21f);
-				marble_ball_ins = Instantiate (marble_ball, Fire.transform.position-tmpV3, transform.rotation)as GameObject;
+				marble_ball_ins = Instantiate (marble_ball, Fire.transform.position+tmpV3, transform.rotation)as GameObject;
 				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*0.5f;//決定子彈威力
-				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+                marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+                marble_ball_ins.GetComponent<marble_ball> ().speed = shootSpeed;
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 			}
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
@@ -262,14 +269,16 @@ public class body : MonoBehaviour {
 				Destroy (wind_ins);
 			}
 		} 
-		else if (skill_name == "10_H") 
-		{
+        else if (skill_name == "skill3") 
+        {
+            SP -= 0.45f;
 			for (int tmpNum = 0; tmpNum < 10; tmpNum++)
 			{
 				Vector3 tmpV3 = new Vector3 (-2.25f + tmpNum * 0.5f, Fire.transform.position.y , this.transform.position.z);
 				marble_ball_ins = Instantiate (marble_ball, tmpV3, transform.rotation)as GameObject;
 				marble_ball_ins.GetComponent<marble_ball> ().self_ball_attack = attack*2.0f;//決定子彈威力
-				marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+                marble_ball_ins.GetComponent<marble_ball> ().Skill = false;//是否為必殺彈
+                marble_ball_ins.GetComponent<marble_ball> ().speed = shootSpeed;
 				Physics.IgnoreCollision(transform.root.GetComponent<Collider>(), marble_ball_ins.GetComponent<Collider>());
 			}
 			Fire_smoke_ins = Instantiate (Fire_smoke, Fire.transform.position, transform.rotation)as GameObject;
@@ -347,10 +356,39 @@ public class body : MonoBehaviour {
 		{
 			if (AI_canshoot) 
 			{
-				//隨機射出子彈數量，若數量大於目前殘彈，則發射殘彈數
-				ran_shoot_num = (int)((Mathf.Floor (Random.Range (1.0f, 5.0f)) < Bullets_able_num) ? Bullets_able_num : Mathf.Floor (Random.Range (1.0f, 5.0f)));
+                float ran_SP = Random.Range(0.5f, 0.9f);
+                int ran_skill = (int)Mathf.Floor(Random.Range(0, 3));
 
-				shoot ("normal");
+                if (SP >= ran_SP)
+                {
+                    if (AI && skill_list[0] && ran_skill == 0)
+                    {
+                        shoot("skill1");
+                    }
+                    
+                    if (AI && skill_list[1] && ran_skill == 1)
+                    {
+                        shoot("skill2");
+                    }
+                   
+                    if (AI && skill_list[2] && ran_skill == 2)
+                    {
+                        shoot("skill3");
+                    }
+                }
+                else
+                {
+                    //隨機射出子彈數量，若數量小於目前殘彈，則發射殘彈數
+                    ran_shoot_num = (int)((Mathf.Floor (Random.Range (1, 4)) < Bullets_able_num) ? Bullets_able_num : Mathf.Floor (Random.Range (1, 4)));
+
+                    for (int i = 0; i < ran_shoot_num; i++)
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                        shoot("normal");
+                    }
+                }
+
+                //SP += 0.05f;
 				AI_canshoot = false;
 				StartCoroutine (AI_shoot ());
 			} 

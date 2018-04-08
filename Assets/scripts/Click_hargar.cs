@@ -101,7 +101,7 @@ public class Click_hargar : MonoBehaviour {
                 con.send_data_ok();
                 break;
             case "Lock_icon":
-                con.popup("須通過最終關卡，才能解鎖", false);
+                con.popup("須通過最終關卡，才能解鎖");
                 break;
             case "Close_btn":
                 con.popup_close();
@@ -128,9 +128,9 @@ public class Click_hargar : MonoBehaviour {
             {
                 foreach (GameObject btn in GameObject.FindGameObjectsWithTag("btn"))
                 {
-                    btn.GetComponent<UITexture>().color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                    btn.GetComponent<UITexture>().color =  Color.gray;
                 }
-                tmpUI.color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                tmpUI.color =  Color.gray;
             }
         }
 	}
@@ -142,17 +142,15 @@ public class Click_hargar : MonoBehaviour {
             UITexture tmpUI = go.GetComponent<UITexture>();
             if (tmpUI != null && isHover)
             {
-                tmp_color = tmpUI.color;
-
-                tmpUI.color = new Color(255.0f, 255.0f, 255.0f, 255.0f);
+                tmpUI.color = new Color(255.0f, 255.0f, 255.0f);
             }
             else if (tmpUI != null && !isHover)
             {
                 foreach (GameObject btn in GameObject.FindGameObjectsWithTag("btn"))
                 {
-                    btn.GetComponent<UITexture>().color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                    btn.GetComponent<UITexture>().color = Color.gray;
                 }
-                tmpUI.color = tmp_color;//new Color(255.0f, 255.0f, 255.0f);
+                tmpUI.color = Color.gray;
             }
         }
     }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Click : MonoBehaviour {
 
 	private member member_con;
+    private main_controller main_con;
 
 	void Awake()
 	{
@@ -17,6 +18,7 @@ public class Click : MonoBehaviour {
 	void Start()
 	{
 		member_con = GameObject.Find ("member_controller").GetComponent<member> ();
+        main_con = GameObject.Find ("main_controller").GetComponent<main_controller> ();
 	}
 
 	private void ObjectOnClick(GameObject go)
@@ -59,6 +61,38 @@ public class Click : MonoBehaviour {
                 Globe.loadName = "Hangar";
                 Application.LoadLevel ("Loading");
                 break;
+            case "Game":
+                main_con.change_step(1);
+                break;
+            case "self":
+                main_con.change_step(2);
+                break;
+            case "BOSS":
+                main_con.change_step(3);
+                break;
+            case "Back":
+                main_con.step_back();
+                break;
+            case "Level1":
+            case "Level2":
+            case "Level3":
+            case "Level4":
+            case "Level5":
+            case "Level6":
+            case "Level7":
+            case "Level8":
+            case "Level9":
+                int level = int.Parse(gameObject.name.Split('l')[1]);
+                main_con.select_level(level, 99);
+                break;
+            case "BOSS0":
+            case "BOSS1":
+            case "BOSS2":
+            case "BOSS3":
+                int machine_no = int.Parse(gameObject.name.Split('S')[2]);
+                main_con.select_level(10, machine_no);
+                break;
+
 
 		
 		}

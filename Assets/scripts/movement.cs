@@ -46,7 +46,7 @@ public class movement : MonoBehaviour {
 
 		if (this.GetComponent<body> ().AI) 
 		{
-			RandomMove (0.5f);
+            RandomMove (this.GetComponent<body>().moveRange);
 			moveSpeed = this.GetComponent<body>().moveSpeed/10;
 		}
 	}
@@ -65,19 +65,28 @@ public class movement : MonoBehaviour {
 				float tmp_dis = Mathf.Abs (goal_pos.x - this.transform.position.x);
 
 				if (goal_pos.x != this.transform.position.x && tmp_dis >= (0.01 * moveSpeed)) {
-					if (goal_pos.x > this.transform.position.x) {
-						if (h < 1) {
-							h += Time.deltaTime;
-						} else {
-							h = 1;
-						}
-					}
-					else
-						if (h > -1) {
-							h -= Time.deltaTime;
-						} else {
-							h = -1;
-						}
+                    if (goal_pos.x < this.transform.position.x) //因為AI是轉180度，要逆向
+                    {
+                        if (h < 1)
+                        {
+                            h += Time.deltaTime;
+                        }
+                        else
+                        {
+                            h = 1;
+                        }
+                    }
+                    else
+                    {
+                        if (h > -1)
+                        {
+                            h -= Time.deltaTime;
+                        }
+                        else
+                        {
+                            h = -1;
+                        }
+                    }
 				} else {
 					h = 0;
 					RandomMove (0.5f);
